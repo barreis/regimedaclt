@@ -4,471 +4,308 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Escape Room RH — Operação CLT</title>
-
 <style>
-:root {
-  --bg: #0b1020;
-  --panel: #141c31;
-  --text: #f4f7ff;
-  --muted: #aab6d3;
-  --cyan: #55e6d1;
-  --purple: #a99bff;
-  --gold: #ffd166;
-  --good: #70e1a1;
-  --bad: #ff7b85;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: radial-gradient(
-    ellipse at top,
-    #202e52 0%,
-    #0b1020 58%
-  );
-  color: var(--text);
-  font-family: Inter, system-ui, sans-serif;
-  min-height: 100vh;
-}
-
-button, select {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-  border: 0;
-}
-
-.wrap {
-  max-width: 1120px;
-  margin: auto;
-  padding: 22px;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 22px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-}
-
-.logo {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, var(--cyan), var(--purple));
-  display: grid;
-  place-items: center;
-  color: #10182a;
-  font-size: 25px;
-  font-weight: 900;
-}
-
-.eyebrow {
-  color: var(--cyan);
-  font-size: .76rem;
-  letter-spacing: .16em;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-h1 {
-  font-size: clamp(1.45rem, 3vw, 2.15rem);
-  margin: 2px 0;
-}
-
-.sub {
-  color: var(--muted);
-  margin: 0;
-  font-size: .92rem;
-}
-
-.stats {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.stat {
-  background: #111a2d;
-  border: 1px solid #2b3958;
-  padding: 10px 14px;
-  border-radius: 14px;
-  min-width: 100px;
-}
-
-.stat small {
-  display: block;
-  color: var(--muted);
-  font-size: .72rem;
-  text-transform: uppercase;
-}
-
-.stat strong {
-  font-size: 1.2rem;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
-  gap: 18px;
-}
-
-.panel {
-  background: linear-gradient(160deg, #17213aee, #11192bed);
-  border: 1px solid #2a3859;
-  border-radius: 22px;
-  box-shadow: 0 18px 50px #0003;
-}
-
-.sidebar {
-  padding: 18px;
-  height: max-content;
-}
-
-.section-title {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  font-weight: 800;
-}
-
-.progressbar {
-  height: 8px;
-  background: #293551;
-  border-radius: 20px;
-  overflow: hidden;
-  margin: 10px 0 17px;
-}
-
-.progressbar span {
-  display: block;
-  height: 100%;
-  width: 0;
-  background: linear-gradient(90deg, var(--cyan), var(--purple));
-  transition: width .3s;
-}
-
-.rooms {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 7px;
-}
-
-.roomdot {
-  aspect-ratio: 1;
-  border-radius: 10px;
-  background: #202b45;
-  color: #9caccb;
-  border: 1px solid #354362;
-  font-weight: 800;
-}
-
-.roomdot.current {
-  background: var(--cyan);
-  color: #10182a;
-}
-
-.roomdot.done {
-  background: #194d48;
-  color: #9df4d0;
-}
-
-.sidebar-note {
-  color: var(--muted);
-  font-size: .82rem;
-  line-height: 1.5;
-  margin-top: 17px;
-}
-
-.game {
-  padding: clamp(20px, 4vw, 36px);
-  min-height: 560px;
-  display: flex;
-  flex-direction: column;
-}
-
-.room-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
-}
-
-.pill {
-  border: 1px solid #354566;
-  border-radius: 999px;
-  padding: 7px 11px;
-  color: var(--cyan);
-  font-size: .78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.room-number {
-  color: var(--muted);
-  font-size: .9rem;
-}
-
-h2 {
-  font-size: clamp(1.45rem, 3vw, 2.15rem);
-  line-height: 1.15;
-  margin: 0 0 14px;
-}
-
-.question {
-  font-size: 1.07rem;
-  line-height: 1.65;
-  color: #e5ebfa;
-  margin: 0 0 22px;
-}
-
-.answers {
-  display: grid;
-  gap: 10px;
-}
-
-.answer {
-  text-align: left;
-  background: #1b2742;
-  color: var(--text);
-  border: 1px solid #344463;
-  border-radius: 14px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  line-height: 1.4;
-}
-
-.answer.selected {
-  border-color: var(--purple);
-  background: #302b54;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 22px;
-}
-
-.btn {
-  padding: 12px 17px;
-  border-radius: 12px;
-  font-weight: 850;
-}
-
-.primary {
-  background: var(--cyan);
-  color: #0b1725;
-}
-
-.secondary {
-  background: #263451;
-  color: var(--text);
-  border: 1px solid #3a4b6f;
-}
-
-.feedback, .hint {
-  margin-top: 16px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  line-height: 1.5;
-  display: none;
-}
-
-.feedback.show, .hint.show {
-  display: block;
-}
-
-.feedback.error {
-  background: #4a202f;
-  color: #ffdce2;
-}
-
-.feedback.success {
-  background: #163d38;
-  color: #c9ffeb;
-}
-
-.hint {
-  background: #2d2b49;
-  color: #e2dcff;
-}
-
-.bottomline {
-  margin-top: auto;
-  padding-top: 26px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-  color: var(--muted);
-  font-size: .82rem;
-}
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: #070b16ef;
-  z-index: 5;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.overlay.show {
-  display: flex;
-}
-
-.modal {
-  max-width: 620px;
-  width: 100%;
-  padding: 35px;
-  text-align: center;
-  background: #151f37;
-  border: 1px solid #3a4b70;
-  border-radius: 25px;
-}
-
-@media (max-width: 760px) {
-  .wrap {
-    padding: 14px;
-  }
-
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    order: 2;
-  }
-
-  .rooms {
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-  }
-
-  .stats {
-    width: 100%;
-  }
-
-  .stat {
-    flex: 1;
-  }
-}
+:root{--bg:#0b1020;--panel:#141c31;--panel2:#1c2742;--text:#f4f7ff;--muted:#aab6d3;--cyan:#55e6d1;--purple:#a99bff;--pink:#ff719b;--gold:#ffd166;--good:#70e1a1;--bad:#ff7b85}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at top,#202e52 0%,#0b1020 58%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,select{font:inherit} button{cursor:pointer;border:0} .wrap{max-width:1120px;margin:auto;padding:22px}
+header{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:13px} .logo{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--cyan),var(--purple));display:grid;place-items:center;color:#10182a;font-size:25px;font-weight:900}
+.eyebrow{color:var(--cyan);font-size:.76rem;letter-spacing:.16em;font-weight:800;text-transform:uppercase} h1{font-size:clamp(1.45rem,3vw,2.15rem);margin:2px 0} .sub{color:var(--muted);margin:0;font-size:.92rem}
+.stats{display:flex;gap:10px;flex-wrap:wrap} .stat{background:#111a2d;border:1px solid #2b3958;padding:10px 14px;border-radius:14px;min-width:100px} .stat small{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase} .stat strong{font-size:1.2rem}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:18px} .panel{background:linear-gradient(160deg,#17213aee,#11192bed);border:1px solid #2a3859;border-radius:22px;box-shadow:0 18px 50px #0003} .sidebar{padding:18px;height:max-content}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:800} .progressbar{height:8px;background:#293551;border-radius:20px;overflow:hidden;margin:10px 0 17px} .progressbar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple));transition:width .3s}
+.rooms{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px} .roomdot{aspect-ratio:1;border-radius:10px;background:#202b45;color:#9caccb;border:1px solid #354362;font-size:.82rem;font-weight:800} .roomdot.current{background:var(--cyan);color:#10182a;border-color:var(--cyan)} .roomdot.done{background:#194d48;color:#9df4d0;border-color:#267c6e} .roomdot:disabled{cursor:default;opacity:1}
+.sidebar-note{color:var(--muted);font-size:.82rem;line-height:1.5;margin-top:17px} .game{padding:clamp(20px,4vw,36px);min-height:560px;display:flex;flex-direction:column}
+.room-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:18px} .pill{border:1px solid #354566;border-radius:999px;padding:7px 11px;color:var(--cyan);font-size:.78rem;font-weight:800;text-transform:uppercase} .room-number{color:var(--muted);font-size:.9rem}
+h2{font-size:clamp(1.45rem,3vw,2.15rem);line-height:1.15;margin:0 0 14px} .question{font-size:1.07rem;line-height:1.65;color:#e5ebfa;margin:0 0 22px;white-space:pre-line}
+.answers{display:grid;gap:10px} .answer{text-align:left;background:#1b2742;color:var(--text);border:1px solid #344463;border-radius:14px;padding:14px 16px;transition:.15s;display:flex;align-items:center;gap:12px;line-height:1.4} .answer:hover{border-color:var(--cyan);background:#233250} .answer.selected{border-color:var(--purple);background:#302b54}
+.letter{width:28px;height:28px;flex-shrink:0;display:grid;place-items:center;border-radius:8px;background:#2d3a58;color:var(--cyan);font-weight:900}
+.order-box{display:grid;gap:12px} .order-row{display:grid;grid-template-columns:35px minmax(0,1fr);align-items:center;gap:10px} .order-row span{color:var(--cyan);font-weight:900} select{width:100%;background:#1b2742;color:var(--text);border:1px solid #344463;border-radius:12px;padding:12px;min-width:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px} .btn{padding:12px 17px;border-radius:12px;font-weight:850;transition:.15s} .primary{background:var(--cyan);color:#0b1725} .secondary{background:#263451;color:var(--text);border:1px solid #3a4b6f} .btn:disabled{opacity:.45;cursor:not-allowed}
+.feedback{margin-top:16px;padding:14px 16px;border-radius:14px;line-height:1.5;display:none} .feedback.show{display:block} .feedback.error{background:#4a202f;border:1px solid #a9435c;color:#ffdce2} .feedback.success{background:#163d38;border:1px solid #2c8b78;color:#c9ffeb}
+.hint{margin-top:12px;padding:14px 16px;background:#2d2b49;border:1px solid #55508c;border-radius:14px;color:#e2dcff;line-height:1.5;display:none} .hint.show{display:block} .hint strong{color:var(--gold)}
+.bottomline{margin-top:auto;padding-top:26px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:.82rem} .foot{text-align:center;color:#7f8eaf;font-size:.78rem;padding:22px 0 5px}
+.overlay{position:fixed;inset:0;background:#070b16ef;z-index:5;display:none;align-items:center;justify-content:center;padding:20px} .overlay.show{display:flex} .modal{max-width:620px;width:100%;padding:clamp(24px,5vw,44px);text-align:center;background:#151f37;border:1px solid #3a4b70;border-radius:25px;box-shadow:0 20px 80px #0009} .modal .big{font-size:3.5rem} .modal p{color:var(--muted);line-height:1.6} .smallprint{font-size:.75rem;color:#8290ad;line-height:1.5}
+@media(max-width:760px){.wrap{padding:14px}.layout{grid-template-columns:1fr}.sidebar{order:2}.game{min-height:540px}.rooms{grid-template-columns:repeat(10,minmax(0,1fr))}.roomdot{font-size:.72rem;border-radius:7px}.stats{width:100%}.stat{flex:1;min-width:80px}}
 </style>
 </head>
-
 <body>
 <div class="wrap">
-
 <header>
-  <div class="brand">
-    <div class="logo">RH</div>
-    <div>
-      <div class="eyebrow">Missão de aprendizagem</div>
-      <h1>Operação CLT</h1>
-      <p class="sub">Escape Room • Regime celetista • 30 salas</p>
-    </div>
-  </div>
-
-  <div class="stats">
-    <div class="stat">
-      <small>Tempo restante</small>
-      <strong id="timer">60:00</strong>
-    </div>
-    <div class="stat">
-      <small>Salas concluídas</small>
-      <strong id="score">0 / 30</strong>
-    </div>
-    <div class="stat">
-      <small>Dicas usadas</small>
-      <strong id="hintsCount">0</strong>
-    </div>
-  </div>
+ <div class="brand"><div class="logo">RH</div><div><div class="eyebrow">Missão de aprendizagem</div><h1>Operação CLT</h1><p class="sub">Escape Room • Regime celetista • 30 salas</p></div></div>
+ <div class="stats"><div class="stat"><small>Tempo restante</small><strong id="timer">60:00</strong></div><div class="stat"><small>Salas concluídas</small><strong id="score">0 / 30</strong></div><div class="stat"><small>Dicas usadas</small><strong id="hintsCount">0</strong></div></div>
 </header>
-
 <div class="layout">
-  <aside class="panel sidebar">
-    <div class="section-title">
-      <span>Mapa das salas</span>
-      <span id="percent">0%</span>
-    </div>
-
-    <div class="progressbar">
-      <span id="progress"></span>
-    </div>
-
-    <div class="rooms" id="roomsMap"></div>
-
-    <p class="sidebar-note">
-      🔐 Resolva o desafio para abrir a próxima sala.
-      Se errar, leia o feedback e peça dicas até encontrar a resposta.
-    </p>
-
-    <p class="sidebar-note">
-      ⏱️ O cronômetro começa quando você inicia a missão.
-    </p>
-  </aside>
-
-  <main class="panel game">
-    <div class="room-top">
-      <span class="pill" id="typePill">Preparação</span>
-      <span class="room-number" id="roomNumber">
-        Missão de 60 minutos
-      </span>
-    </div>
-
-    <h2 id="roomTitle">Você consegue escapar?</h2>
-
-    <p class="question" id="question">
-      Sua equipe está presa no arquivo central de Recursos Humanos.
-      Resolva os 30 desafios para escapar.
-    </p>
-
-    <div id="answerArea"></div>
-    <div id="feedback" class="feedback"></div>
-    <div id="hintBox" class="hint"></div>
-
-    <div class="actions" id="actions">
-      <button class="btn primary" id="startBtn">
-        Iniciar missão →
-      </button>
-    </div>
-
-    <div class="bottomline">
-      <span>Conhecimento abre portas. Respeito protege pessoas.</span>
-      <span>Operação CLT · RH</span>
-    </div>
-  </main>
+ <aside class="panel sidebar">
+  <div class="section-title"><span>Mapa das salas</span><span id="percent">0%</span></div>
+  <div class="progressbar"><span id="progress"></span></div>
+  <div class="rooms" id="roomsMap"></div>
+  <p class="sidebar-note">🔐 Resolva o desafio para abrir a próxima sala. Se errar, leia o feedback e peça dicas até encontrar a resposta.</p>
+  <p class="sidebar-note">⏱️ O cronômetro começa quando você inicia a missão. A página precisa permanecer aberta para a contagem continuar.</p>
+ </aside>
+ <main class="panel game" id="game">
+  <div class="room-top"><span class="pill" id="typePill">Preparação</span><span class="room-number" id="roomNumber">Missão de 60 minutos</span></div>
+  <h2 id="roomTitle">Você consegue escapar?</h2>
+  <p class="question" id="question">Sua equipe está presa no arquivo central de Recursos Humanos. Para sair, será necessário resolver 30 desafios sobre direitos, deveres e boas práticas no trabalho.</p>
+  <div id="answerArea"></div>
+  <div id="feedback" class="feedback"></div>
+  <div id="hintBox" class="hint"></div>
+  <div class="actions" id="actions"><button class="btn primary" id="startBtn">Iniciar missão →</button></div>
+  <div class="bottomline"><span>Conhecimento abre portas. Respeito protege pessoas.</span><span>Operação CLT · RH</span></div>
+ </main>
 </div>
-
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <div id="modalIcon">🏆</div>
-    <h2 id="modalTitle">Missão concluída!</h2>
-    <p id="modalText"></p>
-    <div id="modalExtra"></div>
-    <button class="btn primary" id="restartBtn">
-      Jogar novamente
-    </button>
-  </div>
+<div class="foot">Material educacional. As situações jurídicas podem depender dos fatos, de normas coletivas e da legislação vigente.</div>
 </div>
+<div class="overlay" id="overlay"><div class="modal"><div class="big" id="modalIcon">🏆</div><h2 id="modalTitle">Missão concluída!</h2><p id="modalText"></p><div id="modalExtra"></div><button class="btn primary" id="restartBtn">Jogar novamente</button></div></div>
+<script>
+const rooms = [
+  {"title":"A porta da CLT","typ":"múltipla escolha","q":"Qual norma é a principal referência geral para a consolidação das leis trabalhistas no Brasil?","opts":["Código Civil","Consolidação das Leis do Trabalho (CLT)","Código de Defesa do Consumidor","Constituição de 1824"],"ans":1,"hints":["A sigla tem três letras e reúne normas trabalhistas.","Seu nome começa com “Consolidação”."],"ex":"A resposta é CLT: Consolidação das Leis do Trabalho."},
+  {"title":"Vínculo de emprego","typ":"Verdadeiro ou falso","q":"Para reconhecer uma relação de emprego, analisam-se elementos como pessoalidade, não eventualidade, onerosidade e subordinação.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["Pense se a pessoa trabalha pessoalmente, recebe e se submete à direção do empregador.","Esses elementos são tradicionalmente usados para caracterizar a relação de emprego."],"ex":"Verdadeiro. A análise depende dos fatos concretos, não apenas do nome do contrato."},
+  {"title":"Código secreto","typ":"Código","q":"Decifre o código: cada número corresponde à posição da letra no alfabeto. 3-12-20.","opts":["CLT","CTP","LCT","TCL"],"ans":0,"hints":["3 = C. Continue com 12 e 20.","12 = L; 20 = T. A sigla começa com C."],"ex":"A sequência forma CLT."},
+  {"title":"Contrato em ordem","typ":"Ordenação","q":"Coloque as etapas de uma admissão em uma sequência razoável.","opts":["Definir condições e formalizar a contratação","Realizar exame admissional quando aplicável","Registrar informações nos sistemas e documentos exigidos","Iniciar as atividades conforme as condições acordadas"],"ans":0,"hints":["Comece pela definição da contratação; depois vêm as providências prévias e registros.","O exame admissional deve ocorrer antes de o trabalhador assumir a atividade; os registros legais devem ser providenciados nos prazos aplicáveis."],"ex":"Uma sequência didática possível: definir condições, exame admissional, registros exigidos e início das atividades. Os procedimentos concretos podem variar conforme o caso."},
+  {"title":"Carteira de trabalho","typ":"múltipla escolha","q":"Qual ferramenta substituiu, na maior parte dos casos, a emissão física da carteira de trabalho para registros cotidianos?","opts":["Carteira de estudante","CTPS Digital","CNH Digital","Cadastro Único"],"ans":1,"hints":["É a versão digital da Carteira de Trabalho e Previdência Social.","A sigla é CTPS."],"ex":"A CTPS Digital é o canal usado para consultar vínculos e informações trabalhistas."},
+  {"title":"Experiência","typ":"Verdadeiro ou falso","q":"O contrato de experiência pode ser prorrogado livremente quantas vezes as partes quiserem.","opts":["Verdadeiro","Falso"],"ans":1,"hints":["Contratos a prazo têm limites legais.","A CLT estabelece limite para o contrato de experiência e para sua prorrogação."],"ex":"Falso. O contrato de experiência não pode ultrapassar 90 dias e a prorrogação não pode desrespeitar as regras legais."},
+  {"title":"Jornada padrão","typ":"múltipla escolha","q":"Como regra geral constitucional, a jornada normal não deve exceder:","opts":["6 horas por dia em qualquer emprego","8 horas diárias e 44 semanais, observadas as regras e exceções","10 horas diárias sem limite semanal","12 horas diárias em todos os contratos"],"ans":1,"hints":["Pense no limite semanal de 44 horas.","A referência geral é 8 horas por dia e 44 por semana."],"ex":"A regra geral é 8 horas diárias e 44 semanais, com regimes e exceções previstos em lei."},
+  {"title":"Intervalo","typ":"Verdadeiro ou falso","q":"Em jornadas superiores a seis horas, a regra geral prevê intervalo para repouso ou alimentação, observadas as hipóteses legais e normas aplicáveis.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["O intervalo intrajornada serve para repouso e alimentação.","A CLT estabelece uma regra geral para jornadas acima de seis horas, com particularidades e possíveis ajustes legais."],"ex":"Verdadeiro."},
+  {"title":"Hora extra","typ":"múltipla escolha","q":"Qual é o adicional mínimo constitucional para o serviço extraordinário, salvo regras mais favoráveis?","opts":["10%","20%","50%","100% em todos os casos"],"ans":2,"hints":["É metade do valor da hora normal.","O percentual começa com o número 5."],"ex":"O adicional mínimo é de 50%, sem prejuízo de condições mais favoráveis ou regras específicas."},
+  {"title":"Descanso semanal","typ":"Código","q":"Qual sigla representa o descanso semanal remunerado?","opts":["DSR","FGTS","INSS","IRRF"],"ans":0,"hints":["É um descanso semanal que também é remunerado.","As letras são D, S e R."],"ex":"DSR significa descanso semanal remunerado."},
+    {"title":"Férias: período","typ":"múltipla escolha","q":"Em regra, após 12 meses de vigência do contrato, o empregado adquire:","opts":["Direito ao período aquisitivo de férias","Direito automático a 60 dias de férias","Aposentadoria proporcional","Direito a escolher qualquer data sem combinar"],"ans":0,"hints":["Esse ciclo é chamado período aquisitivo.","O período aquisitivo normalmente corresponde a 12 meses de contrato."],"ex":"O empregado adquire o direito às férias após o período aquisitivo, conforme as regras legais."},
+  {"title":"Férias em ordem","typ":"Ordenação","q":"Organize as etapas gerais relacionadas às férias.","opts":["Completar o período aquisitivo","Empregador definir a época de concessão dentro do período concessivo legal","Comunicar as férias com a antecedência legal","Pagar a remuneração de férias no prazo legal"],"ans":0,"hints":["Primeiro se adquire o direito; depois ocorre a concessão.","A comunicação deve ocorrer com antecedência e o pagamento deve respeitar o prazo previsto em lei."],"ex":"A sequência didática é aquisição, definição da época, aviso e pagamento no prazo legal."},
+  {"title":"Terço constitucional","typ":"múltipla escolha","q":"Além da remuneração normal de férias, a Constituição garante adicional de pelo menos:","opts":["Um décimo","Um terço","Metade","Dois terços"],"ans":1,"hints":["É uma fração equivalente a 1/3.","O nome popular é “terço de férias”."],"ex":"O adicional constitucional é de pelo menos um terço da remuneração de férias."},
+  {"title":"Abono pecuniário","typ":"Verdadeiro ou falso","q":"Em regra, o empregado pode converter em abono pecuniário um terço do período de férias a que tiver direito, se cumprir os requisitos e o prazo legal.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["Não é a venda de todas as férias.","A CLT permite converter parte do período em abono, mediante solicitação tempestiva."],"ex":"Verdadeiro. O abono pecuniário tem limites e prazo legal para solicitação."},
+  {"title":"13º salário","typ":"múltipla escolha","q":"O 13º salário corresponde, em regra, a:","opts":["Uma gratificação anual calculada conforme a remuneração e os meses computáveis","Um bônus facultativo em todos os empregos","Um pagamento exclusivo de quem trabalha aos domingos","Um benefício pago apenas após cinco anos"],"ans":0,"hints":["Também é conhecido como gratificação natalina.","É um direito trabalhista anual, proporcional quando aplicável."],"ex":"O 13º é uma gratificação anual, calculada conforme as regras legais e a proporção devida."},
+  {"title":"FGTS","typ":"múltipla escolha","q":"Qual afirmação sobre o FGTS está correta?","opts":["É um desconto comum de 8% do salário do empregado","O empregador deposita valores na conta vinculada, conforme a legislação","É pago somente quando há férias","Substitui o salário mensal"],"ans":1,"hints":["Em regra, o depósito é obrigação do empregador.","Não confunda depósito patronal com desconto salarial."],"ex":"O FGTS é depositado pelo empregador na conta vinculada do trabalhador, nos termos legais."},
+  {"title":"INSS","typ":"Verdadeiro ou falso","q":"A contribuição previdenciária do empregado pode variar conforme a faixa salarial e as regras vigentes.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["A contribuição não é necessariamente um percentual único para todos.","As alíquotas progressivas e limites podem mudar."],"ex":"Verdadeiro. Consulte sempre as tabelas oficiais vigentes para cálculos reais."},
+  {"title":"Salário e remuneração","typ":"múltipla escolha","q":"Qual alternativa melhor descreve a distinção geral entre salário e remuneração na CLT?","opts":["São sempre palavras com significados idênticos em qualquer contexto","Salário é pago pelo empregador; remuneração pode abranger salário e parcelas adicionais previstas em lei","Remuneração é apenas o vale-transporte","Salário só existe para servidores estatutários"],"ans":1,"hints":["A remuneração pode ser um conceito mais abrangente.","Pense em salário acrescido de parcelas que legalmente integram a remuneração."],"ex":"Em termos gerais, a remuneração pode compreender o salário e outras parcelas previstas na legislação."},
+  {"title":"Vale-transporte","typ":"Verdadeiro ou falso","q":"O vale-transporte, quando devido, pode ser usado livremente para qualquer compra pessoal.","opts":["Verdadeiro","Falso"],"ans":1,"hints":["O benefício tem finalidade específica.","Ele se destina ao deslocamento residência-trabalho e vice-versa, conforme as regras aplicáveis."],"ex":"Falso. O vale-transporte tem finalidade vinculada ao deslocamento para o trabalho."},
+  {"title":"Assédio moral","typ":"múltipla escolha","q":"Qual situação é um exemplo típico de possível assédio moral?","opts":["Feedback respeitoso e específico sobre uma tarefa","Humilhações repetidas, exposição vexatória e perseguição no trabalho","Orientação de segurança feita com respeito","Distribuição transparente de tarefas"],"ans":1,"hints":["Observe se há humilhação ou degradação reiterada.","A alternativa envolve exposição vexatória e perseguição."],"ex":"Humilhações repetidas e perseguição podem caracterizar assédio moral; a análise depende do contexto e das provas."},
+    {"title":"Assédio sexual","typ":"múltipla escolha","q":"No contexto do trabalho, qual conduta exige atenção especial como possível assédio sexual?","opts":["Convite insistente ou pressão sexual associada a constrangimento ou abuso de poder","Perguntar sobre o andamento de um relatório","Solicitar uso de equipamento de proteção","Marcar reunião de equipe"],"ans":0,"hints":["Considere a conduta de natureza sexual e o constrangimento ou abuso de poder.","Não é necessário que a situação ocorra em público para ser grave."],"ex":"Condutas de natureza sexual indesejadas, especialmente com constrangimento ou abuso de poder, devem ser levadas a sério. O enquadramento jurídico depende dos fatos."},
+  {"title":"Canal de denúncia","typ":"Verdadeiro ou falso","q":"Quem presencia assédio deve preservar informações relevantes e buscar canais seguros de denúncia, evitando divulgar dados sensíveis indiscriminadamente.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["Acolhimento, registro e canais adequados ajudam a apurar os fatos.","Evite exposição pública desnecessária; procure RH, canal de ética, sindicato ou autoridade competente conforme o caso."],"ex":"Verdadeiro. Segurança, confidencialidade e apuração adequada são importantes."},
+  {"title":"Discriminação","typ":"múltipla escolha","q":"Uma empresa rejeita candidatos qualificados exclusivamente por serem de determinada raça. Isso é:","opts":["Uma prática legítima de seleção","Possível discriminação vedada pela legislação","Uma regra de produtividade","Uma exigência universal da CLT"],"ans":1,"hints":["A decisão não usa critérios profissionais pertinentes.","A característica pessoal protegida está sendo usada como motivo de exclusão."],"ex":"É possível discriminação vedada pela legislação; decisões de seleção devem respeitar a igualdade e as normas aplicáveis."},
+  {"title":"CIPA e prevenção","typ":"múltipla escolha","q":"Qual é uma finalidade central da CIPA e das ações de prevenção?","opts":["Aumentar metas a qualquer custo","Prevenir acidentes e doenças relacionadas ao trabalho","Substituir todos os profissionais de saúde","Aplicar punições sem apuração"],"ans":1,"hints":["Pense em segurança e saúde no trabalho.","A sigla está ligada à prevenção de acidentes e assédio, conforme as normas vigentes."],"ex":"A CIPA e as ações de prevenção contribuem para um ambiente de trabalho seguro e saudável."},
+  {"title":"EPI","typ":"Verdadeiro ou falso","q":"Fornecer um EPI elimina automaticamente toda responsabilidade do empregador pela segurança no trabalho.","opts":["Verdadeiro","Falso"],"ans":1,"hints":["O equipamento é apenas uma parte da prevenção.","Também importam adequação, treinamento, fiscalização e medidas coletivas."],"ex":"Falso. O EPI é parte de um conjunto de medidas de prevenção; não elimina automaticamente responsabilidades."},
+  {"title":"Licença-maternidade","typ":"múltipla escolha","q":"Qual é a duração geral da licença-maternidade prevista na Constituição e na legislação para muitas trabalhadoras?","opts":["30 dias","60 dias","120 dias","365 dias"],"ans":2,"hints":["É um período de quatro meses.","120 dias equivalem a quatro meses."],"ex":"A duração geral é de 120 dias, podendo existir hipóteses de extensão previstas em lei ou programas específicos."},
+  {"title":"Afastamento por doença","typ":"Verdadeiro ou falso","q":"O empregado deve seguir os procedimentos de comunicação e comprovação do afastamento por motivo de saúde previstos nas regras aplicáveis.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["A documentação e os prazos podem importar.","O procedimento depende da situação, da duração e das normas aplicáveis."],"ex":"Verdadeiro. É importante seguir os procedimentos legais e internos sem substituir avaliação médica."},
+  {"title":"Aviso-prévio","typ":"múltipla escolha","q":"O aviso-prévio serve, em termos gerais, para:","opts":["Comunicar antecipadamente o encerramento do contrato, conforme as regras aplicáveis","Garantir férias em dobro em qualquer situação","Substituir o registro de emprego","Eliminar todas as verbas rescisórias"],"ans":0,"hints":["É uma comunicação prévia sobre o fim do contrato.","O próprio nome indica que há um aviso com antecedência."],"ex":"O aviso-prévio comunica a rescisão e segue regras de duração, forma e efeitos conforme o caso."},
+  {"title":"Rescisão","typ":"Ordenação","q":"Na conferência de uma rescisão, qual sequência de análise é mais prudente?","opts":["Identificar o tipo e a data de desligamento","Verificar saldo salarial, férias e 13º proporcionais e demais verbas cabíveis","Conferir documentos, descontos permitidos e prazos de pagamento","Entregar os documentos e orientar o trabalhador sobre os registros aplicáveis"],"ans":0,"hints":["Antes de calcular valores, identifique como e quando ocorreu o desligamento.","As verbas variam conforme o tipo de rescisão; depois confira cálculos, prazos e documentos."],"ex":"A sequência começa por identificar a modalidade de desligamento e então verificar verbas, documentos e prazos."},
+  {"title":"Caso prático final","typ":"múltipla escolha","q":"Uma supervisora expõe repetidamente um funcionário ao ridículo, faz comentários ofensivos e ameaça prejudicá-lo quando ele pede ajuda. Qual é a melhor primeira resposta organizacional?","opts":["Ignorar porque a supervisora tem cargo superior","Orientar a vítima a pedir demissão imediatamente","Acolher, registrar os fatos com cuidado e encaminhar para canal adequado de apuração e proteção contra retaliação","Publicar os nomes nas redes sociais"],"ans":2,"hints":["Priorize acolhimento, registro seguro e apuração imparcial.","Hierarquia não autoriza humilhação. Evite exposição pública e retaliação."],"ex":"A resposta mais adequada é acolher, registrar com segurança e encaminhar para apuração por canais apropriados."}
+];
 
-</div>
+let current=0, done=new Set(), hintLevel=0, hintsUsed=0, selected=null, orderValues=[], started=false, ended=false, seconds=3600, timerId=null;
+const $=id=>document.getElementById(id);
+
+function fmt(s){
+ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+}
+
+function buildMap(){
+ $('roomsMap').innerHTML='';
+ rooms.forEach((r,i)=>{
+  const b=document.createElement('button');
+  b.className='roomdot'+(i===current?' current':'')+(done.has(i)?' done':'');
+  b.textContent=done.has(i)?'✓':i+1;
+  b.disabled=true;
+  b.title=r.title;
+  $('roomsMap').appendChild(b);
+ });
+ const p=Math.round(done.size/rooms.length*100);
+ $('progress').style.width=p+'%';
+ $('percent').textContent=p+'%';
+ $('score').textContent=done.size+' / 30';
+ $('hintsCount').textContent=hintsUsed;
+}
+
+function startGame(){
+ if(started)return;
+ started=true;
+ $('actions').innerHTML='';
+ timerId=setInterval(()=>{
+  if(ended)return;
+  seconds--;
+  $('timer').textContent=fmt(Math.max(0,seconds));
+  if(seconds<=0)finish(false);
+ },1000);
+ renderRoom();
+}
+
+function renderRoom(){
+ if(ended)return;
+ const r=rooms[current];
+ hintLevel=0;
+ selected=null;
+ orderValues=[];
+ $('typePill').textContent=r.typ;
+ $('roomNumber').textContent='Sala '+(current+1)+' de '+rooms.length;
+ $('roomTitle').textContent=r.title;
+ $('question').textContent=r.q;
+ $('feedback').className='feedback';
+ $('feedback').textContent='';
+ $('hintBox').className='hint';
+ $('hintBox').innerHTML='';
+ $('answerArea').innerHTML='';
+ $('actions').innerHTML='';
+
+ if(r.typ==='Ordenação'){
+  const box=document.createElement('div');
+  box.className='order-box';
+  const shuffled=r.opts.map((v,i)=>({v,orig:i})).sort(()=>Math.random()-.5);
+  orderValues=shuffled.map(x=>x.orig);
+
+  for(let i=0;i<r.opts.length;i++){
+   const row=document.createElement('div');
+   row.className='order-row';
+   const n=document.createElement('span');
+   n.textContent=(i+1)+'.';
+   const sel=document.createElement('select');
+   sel.dataset.slot=i;
+   sel.innerHTML='<option value="">Escolha a etapa…</option>'+
+    shuffled.map(x=>`<option value="${x.orig}">${x.v}</option>`).join('');
+   row.append(n,sel);
+   box.appendChild(row);
+  }
+  $('answerArea').appendChild(box);
+ }else{
+  const box=document.createElement('div');
+  box.className='answers';
+  r.opts.forEach((opt,i)=>{
+   const b=document.createElement('button');
+   b.className='answer';
+   b.innerHTML=`<span class="letter">${String.fromCharCode(65+i)}</span><span>${opt}</span>`;
+   b.onclick=()=>{
+    selected=i;
+    box.querySelectorAll('.answer').forEach(x=>x.classList.remove('selected'));
+    b.classList.add('selected');
+   };
+   box.appendChild(b);
+  });
+  $('answerArea').appendChild(box);
+ }
+
+ const check=document.createElement('button');
+ check.className='btn primary';
+ check.textContent='Validar resposta';
+ check.onclick=checkAnswer;
+ $('actions').appendChild(check);
+
+ const hint=document.createElement('button');
+ hint.className='btn secondary';
+ hint.textContent='💡 Pedir dica';
+ hint.onclick=showHint;
+ $('actions').appendChild(hint);
+
+ const reset=document.createElement('button');
+ reset.className='btn secondary';
+ reset.textContent='Limpar';
+ reset.onclick=()=>renderRoom();
+ $('actions').appendChild(reset);
+
+ buildMap();
+}
+
+function checkAnswer(){
+ if(ended)return;
+ const r=rooms[current];
+ let correct=false;
+
+ if(r.typ==='Ordenação'){
+  const vals=[...$('answerArea').querySelectorAll('select')].map(s=>s.value);
+  if(vals.some(v=>v==='')){
+   feedback('error','Organize todas as etapas antes de validar.');
+   return;
+  }
+  correct=vals.every((v,i)=>Number(v)===i);
+ }else{
+  if(selected===null){
+   feedback('error','Escolha uma resposta antes de validar.');
+   return;
+  }
+  correct=selected===r.ans;
+ }
+
+ if(correct){
+  done.add(current);
+  feedback('success','🔓 Sala liberada! '+r.ex);
+  $('actions').innerHTML='';
+
+  const next=document.createElement('button');
+  next.className='btn primary';
+  next.textContent=current===rooms.length-1?'Concluir missão 🏆':'Próxima sala →';
+  next.onclick=()=>{
+   if(current===rooms.length-1)finish(true);
+   else{
+    current++;
+    renderRoom();
+   }
+  };
+  $('actions').appendChild(next);
+  buildMap();
+ }else{
+  let msg='Ainda não. Tente novamente.';
+  if(r.typ==='Ordenação')msg='A ordem ainda não está correta. Releia as etapas e use uma dica se precisar.';
+  else if(r.typ==='Verdadeiro ou falso')msg='Essa afirmação não foi avaliada corretamente. Releia cada palavra e pense na regra geral.';
+  feedback('error','🔒 '+msg+' Você pode tentar novamente ou pedir uma dica.');
+ }
+}
+
+function feedback(type,msg){
+ $('feedback').className='feedback show '+type;
+ $('feedback').textContent=msg;
+}
+
+function showHint(){
+ const r=rooms[current];
+ if(hintLevel<r.hints.length){
+  $('hintBox').className='hint show';
+  $('hintBox').innerHTML='<strong>Dica '+(hintLevel+1)+':</strong> '+r.hints[hintLevel];
+  hintLevel++;
+  hintsUsed++;
+  $('hintsCount').textContent=hintsUsed;
+ }else{
+  $('hintBox').className='hint show';
+  $('hintBox').innerHTML='<strong>Orientação:</strong> '+r.ex;
+ }
+}
+
+function finish(won){
+ ended=true;
+ clearInterval(timerId);
+ $('overlay').classList.add('show');
+ $('modalIcon').textContent=won?'🏆':'⏰';
+ $('modalTitle').textContent=won?'Missão concluída!':'Tempo esgotado!';
+ $('modalText').textContent=won
+  ?'Parabéns! Você liberou as 30 salas e concluiu a Operação CLT.'
+  :'O tempo terminou. Você concluiu '+done.size+' de 30 salas. Revise os temas e tente novamente.';
+ $('modalExtra').innerHTML='<p><strong>Resultado: '+done.size+'/30 salas</strong><br>Tempo restante: '+fmt(Math.max(0,seconds))+'<br>Dicas utilizadas: '+hintsUsed+'</p><p class="smallprint">Este resultado é apenas um resumo local no navegador; não é enviado automaticamente ao professor.</p>';
+}
+
+function restart(){
+ clearInterval(timerId);
+ current=0;
+ done=new Set();
+ hintLevel=0;
+ hintsUsed=0;
+ selected=null;
+ orderValues=[];
+ started=false;
+ ended=false;
+ seconds=3600;
+ $('timer').textContent='60:00';
+ $('overlay').classList.remove('show');
+ $('roomTitle').textContent='Você consegue escapar?';
+ $('typePill').textContent='Preparação';
+ $('roomNumber').textContent='Missão de 60 minutos';
+ $('question').textContent='Sua equipe está presa no arquivo central de Recursos Humanos. Para sair, será necessário resolver 30 desafios sobre direitos, deveres e boas práticas no trabalho.';
+ $('answerArea').innerHTML='';
+ $('feedback').className='feedback';
+ $('hintBox').className='hint';
+ $('actions').innerHTML='<button class="btn primary" id="startBtn">Iniciar missão →</button>';
+ $('startBtn').onclick=startGame;
+ buildMap();
+}
+
+$('startBtn').onclick=startGame;
+$('restartBtn').onclick=restart;
+buildMap();
+</script>
+</body>
+</html>
