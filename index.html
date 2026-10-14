@@ -3,309 +3,465 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escape Room RH — Operação CLT</title>
+<title>PRÁXIS | Escape Room de Língua Portuguesa</title>
 <style>
-:root{--bg:#0b1020;--panel:#141c31;--panel2:#1c2742;--text:#f4f7ff;--muted:#aab6d3;--cyan:#55e6d1;--purple:#a99bff;--pink:#ff719b;--gold:#ffd166;--good:#70e1a1;--bad:#ff7b85}
-*{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at top,#202e52 0%,#0b1020 58%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
-button,select{font:inherit} button{cursor:pointer;border:0} .wrap{max-width:1120px;margin:auto;padding:22px}
-header{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:22px}
-.brand{display:flex;align-items:center;gap:13px} .logo{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--cyan),var(--purple));display:grid;place-items:center;color:#10182a;font-size:25px;font-weight:900}
-.eyebrow{color:var(--cyan);font-size:.76rem;letter-spacing:.16em;font-weight:800;text-transform:uppercase} h1{font-size:clamp(1.45rem,3vw,2.15rem);margin:2px 0} .sub{color:var(--muted);margin:0;font-size:.92rem}
-.stats{display:flex;gap:10px;flex-wrap:wrap} .stat{background:#111a2d;border:1px solid #2b3958;padding:10px 14px;border-radius:14px;min-width:100px} .stat small{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase} .stat strong{font-size:1.2rem}
-.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:18px} .panel{background:linear-gradient(160deg,#17213aee,#11192bed);border:1px solid #2a3859;border-radius:22px;box-shadow:0 18px 50px #0003} .sidebar{padding:18px;height:max-content}
-.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:800} .progressbar{height:8px;background:#293551;border-radius:20px;overflow:hidden;margin:10px 0 17px} .progressbar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple));transition:width .3s}
-.rooms{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px} .roomdot{aspect-ratio:1;border-radius:10px;background:#202b45;color:#9caccb;border:1px solid #354362;font-size:.82rem;font-weight:800} .roomdot.current{background:var(--cyan);color:#10182a;border-color:var(--cyan)} .roomdot.done{background:#194d48;color:#9df4d0;border-color:#267c6e} .roomdot:disabled{cursor:default;opacity:1}
-.sidebar-note{color:var(--muted);font-size:.82rem;line-height:1.5;margin-top:17px} .game{padding:clamp(20px,4vw,36px);min-height:560px;display:flex;flex-direction:column}
-.room-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:18px} .pill{border:1px solid #354566;border-radius:999px;padding:7px 11px;color:var(--cyan);font-size:.78rem;font-weight:800;text-transform:uppercase} .room-number{color:var(--muted);font-size:.9rem}
-h2{font-size:clamp(1.45rem,3vw,2.15rem);line-height:1.15;margin:0 0 14px} .question{font-size:1.07rem;line-height:1.65;color:#e5ebfa;margin:0 0 22px;white-space:pre-line}
-.answers{display:grid;gap:10px} .answer{text-align:left;background:#1b2742;color:var(--text);border:1px solid #344463;border-radius:14px;padding:14px 16px;transition:.15s;display:flex;align-items:center;gap:12px;line-height:1.4} .answer:hover{border-color:var(--cyan);background:#233250} .answer.selected{border-color:var(--purple);background:#302b54}
-.letter{width:28px;height:28px;flex-shrink:0;display:grid;place-items:center;border-radius:8px;background:#2d3a58;color:var(--cyan);font-weight:900}
-.order-box{display:grid;gap:12px} .order-row{display:grid;grid-template-columns:35px minmax(0,1fr);align-items:center;gap:10px} .order-row span{color:var(--cyan);font-weight:900} select{width:100%;background:#1b2742;color:var(--text);border:1px solid #344463;border-radius:12px;padding:12px;min-width:0}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px} .btn{padding:12px 17px;border-radius:12px;font-weight:850;transition:.15s} .primary{background:var(--cyan);color:#0b1725} .secondary{background:#263451;color:var(--text);border:1px solid #3a4b6f} .btn:disabled{opacity:.45;cursor:not-allowed}
-.feedback{margin-top:16px;padding:14px 16px;border-radius:14px;line-height:1.5;display:none} .feedback.show{display:block} .feedback.error{background:#4a202f;border:1px solid #a9435c;color:#ffdce2} .feedback.success{background:#163d38;border:1px solid #2c8b78;color:#c9ffeb}
-.hint{margin-top:12px;padding:14px 16px;background:#2d2b49;border:1px solid #55508c;border-radius:14px;color:#e2dcff;line-height:1.5;display:none} .hint.show{display:block} .hint strong{color:var(--gold)}
-.bottomline{margin-top:auto;padding-top:26px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:.82rem} .foot{text-align:center;color:#7f8eaf;font-size:.78rem;padding:22px 0 5px}
-.overlay{position:fixed;inset:0;background:#070b16ef;z-index:5;display:none;align-items:center;justify-content:center;padding:20px} .overlay.show{display:flex} .modal{max-width:620px;width:100%;padding:clamp(24px,5vw,44px);text-align:center;background:#151f37;border:1px solid #3a4b70;border-radius:25px;box-shadow:0 20px 80px #0009} .modal .big{font-size:3.5rem} .modal p{color:var(--muted);line-height:1.6} .smallprint{font-size:.75rem;color:#8290ad;line-height:1.5}
-@media(max-width:760px){.wrap{padding:14px}.layout{grid-template-columns:1fr}.sidebar{order:2}.game{min-height:540px}.rooms{grid-template-columns:repeat(10,minmax(0,1fr))}.roomdot{font-size:.72rem;border-radius:7px}.stats{width:100%}.stat{flex:1;min-width:80px}}
+:root{--bg:#0b1020;--panel:#151d33;--panel2:#1d2945;--purple:#9b7cff;--cyan:#53e0df;--gold:#ffd166;--red:#ff7185;--green:#55e6a5;--text:#f4f5ff;--muted:#a7b1ce}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#20254b,#0b1020 65%);color:var(--text);font-family:system-ui,Arial,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+header{padding:22px 5%;border-bottom:1px solid #ffffff18;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.logo{font-size:1.5rem;font-weight:900;letter-spacing:3px;color:var(--cyan)}
+.logo span{color:var(--purple)}
+header small{color:var(--muted)}
+main{max-width:1150px;margin:auto;padding:24px 16px 60px}
+h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;margin:10px 0}
+h2{margin-top:0}
+p{line-height:1.65}
+.muted{color:var(--muted)}
+.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:.76rem;color:var(--cyan);font-weight:800}
+.card{background:linear-gradient(145deg,#19233d,#121a2e);border:1px solid #ffffff19;border-radius:20px;padding:22px;margin:16px 0;box-shadow:0 12px 35px #0002}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.btn{background:var(--purple);border:0;border-radius:11px;padding:12px 17px;font-weight:800;color:#101020;margin:5px 4px 5px 0;transition:all 0.2s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn.secondary{background:var(--panel2);border:1px solid #ffffff25;color:var(--text)}
+.btn.cyan{background:var(--cyan)}
+.btn.gold{background:var(--gold)}
+.btn.danger{background:#562338;color:#fff;border:1px solid var(--red)}
+input,textarea,select{width:100%;padding:12px;border:1px solid #ffffff30;background:#0b1224;color:white;border-radius:10px;margin:7px 0 13px}
+textarea{min-height:130px;resize:vertical}
+label{font-weight:700;font-size:.92rem}
+.option{display:block;width:100%;text-align:left;padding:14px;margin:9px 0;border-radius:12px;border:1px solid #ffffff25;background:#1c2944;color:white;transition:all 0.2s}
+.option:hover{border-color:var(--cyan)}
+.option.selected{border:2px solid var(--cyan);background:#26365a}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:#0d1428;border-radius:13px;padding:13px;text-align:center}
+.stat strong{display:block;font-size:1.35rem;color:var(--cyan)}
+.progress{height:9px;background:#080d1b;border-radius:20px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));width:0%;transition:width .3s}
+.badge{display:inline-block;border:1px solid #ffffff28;border-radius:30px;padding:5px 10px;color:var(--cyan);font-size:.8rem;margin:3px}
+.hidden{display:none!important}
+.qr{width:160px;height:160px;background:white;padding:7px;border-radius:12px;display:block;margin:12px auto}
+.door{border:1px solid #ffffff20;border-radius:12px;padding:12px;background:#111a30;text-align:center}
+.door.done{border-color:var(--green);background:#12302b}
+.door.current{border-color:var(--gold);box-shadow:0 0 15px #ffd16625}
+.door.locked{opacity:.5}
+#feedback{white-space:pre-wrap;line-height:1.65;margin-top:15px;font-weight:600}
+table{width:100%;border-collapse:collapse}
+th,td{padding:11px;text-align:left;border-bottom:1px solid #ffffff20}
+th{color:var(--cyan)}
+.small{font-size:.84rem}
+footer{text-align:center;color:var(--muted);padding:25px}
+@media(max-width:600px){.card{padding:16px}.stats{grid-template-columns:repeat(3,1fr)}.stat strong{font-size:1.05rem}header{padding:17px}}
 </style>
 </head>
 <body>
-<div class="wrap">
 <header>
- <div class="brand"><div class="logo">RH</div><div><div class="eyebrow">Missão de aprendizagem</div><h1>Operação CLT</h1><p class="sub">Escape Room • Regime celetista • 30 salas</p></div></div>
- <div class="stats"><div class="stat"><small>Tempo restante</small><strong id="timer">60:00</strong></div><div class="stat"><small>Salas concluídas</small><strong id="score">0 / 30</strong></div><div class="stat"><small>Dicas usadas</small><strong id="hintsCount">0</strong></div></div>
+  <div><div class="logo">PRÁXIS<span>.</span></div><small>Escape Room de Língua Portuguesa</small></div>
+  <button class="btn secondary" onclick="showTeacher()">Painel do professor</button>
 </header>
-<div class="layout">
- <aside class="panel sidebar">
-  <div class="section-title"><span>Mapa das salas</span><span id="percent">0%</span></div>
-  <div class="progressbar"><span id="progress"></span></div>
-  <div class="rooms" id="roomsMap"></div>
-  <p class="sidebar-note">🔐 Resolva o desafio para abrir a próxima sala. Se errar, leia o feedback e peça dicas até encontrar a resposta.</p>
-  <p class="sidebar-note">⏱️ O cronômetro começa quando você inicia a missão. A página precisa permanecer aberta para a contagem continuar.</p>
- </aside>
- <main class="panel game" id="game">
-  <div class="room-top"><span class="pill" id="typePill">Preparação</span><span class="room-number" id="roomNumber">Missão de 60 minutos</span></div>
-  <h2 id="roomTitle">Você consegue escapar?</h2>
-  <p class="question" id="question">Sua equipe está presa no arquivo central de Recursos Humanos. Para sair, será necessário resolver 30 desafios sobre direitos, deveres e boas práticas no trabalho.</p>
-  <div id="answerArea"></div>
-  <div id="feedback" class="feedback"></div>
-  <div id="hintBox" class="hint"></div>
-  <div class="actions" id="actions"><button class="btn primary" id="startBtn">Iniciar missão →</button></div>
-  <div class="bottomline"><span>Conhecimento abre portas. Respeito protege pessoas.</span><span>Operação CLT · RH</span></div>
- </main>
-</div>
-<div class="foot">Material educacional. As situações jurídicas podem depender dos fatos, de normas coletivas e da legislação vigente.</div>
-</div>
-<div class="overlay" id="overlay"><div class="modal"><div class="big" id="modalIcon">🏆</div><h2 id="modalTitle">Missão concluída!</h2><p id="modalText"></p><div id="modalExtra"></div><button class="btn primary" id="restartBtn">Jogar novamente</button></div></div>
+<main>
+<section id="home">
+  <div class="eyebrow">Missão especial · Operação Palavra</div>
+  <h1>O conhecimento<br>é a chave.</h1>
+  <p class="muted">Trinta salas. Textos, códigos, análises linguísticas e enigmas. Vocês têm 120 minutos para decifrar os desafios e conquistar a vitória.</p>
+  <div class="card">
+    <h2>Escolha sua equipe</h2>
+    <p class="muted">Entre pelo QR Code ou selecione sua equipe abaixo.</p>
+    <div class="grid">
+      <div class="door">
+        <h3>🔷 Equipe 1</h3>
+        <img id="qr1" class="qr" alt="QR Code da Equipe 1">
+        <button class="btn" onclick="joinTeam(1)">Entrar na equipe 1</button>
+      </div>
+      <div class="door">
+        <h3>🟣 Equipe 2</h3>
+        <img id="qr2" class="qr" alt="QR Code da Equipe 2">
+        <button class="btn" onclick="joinTeam(2)">Entrar na equipe 2</button>
+      </div>
+    </div>
+    <p class="small muted">Os QR Codes usam o endereço desta página quando ela está publicada na internet.</p>
+    <label for="teamName">Nome personalizado da equipe (opcional)</label>
+    <input id="teamName" maxlength="35" placeholder="Ex.: Guardiões da Palavra">
+    <label for="teamSelect">Entrar como</label>
+    <select id="teamSelect"><option value="1">Equipe 1</option><option value="2">Equipe 2</option></select>
+    <button class="btn cyan" onclick="joinTeam(Number(document.getElementById('teamSelect').value))">Iniciar missão geral →</button>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="eyebrow">Missão</div><h3>30 salas secretas</h3><p class="muted">Interpretação, literatura afro-brasileira, morfossintaxe, argumentação e revisão textual.</p></div>
+    <div class="card"><div class="eyebrow">Estratégia</div><h3>As pistas têm preço</h3><p class="muted">Cada erro libera uma dica, mas reduz sua pontuação. Pense, discuta e registre a resposta.</p></div>
+    <div class="card"><div class="eyebrow">Objetivo</div><h3>Decifrar a palavra final</h3><p class="muted">Avance pelas salas, preserve seus pontos e conclua a missão antes do tempo acabar.</p></div>
+  </div>
+</section>
+
+<section id="game" class="hidden">
+  <div class="grid">
+    <div class="card">
+      <div class="eyebrow">Equipe em missão</div><h2 id="gTeam">Equipe</h2>
+      <div class="stats">
+        <div class="stat"><span class="small">Tempo</span><strong id="timer">120:00</strong></div>
+        <div class="stat"><span class="small">Pontos</span><strong id="points">3000</strong></div>
+        <div class="stat"><span class="small">Erros</span><strong id="errors">0</strong></div>
+      </div>
+      <p class="small muted" id="progressLabel">Sala 1 de 30</p>
+      <div class="progress"><div id="progressBar"></div></div>
+      <button class="btn secondary" onclick="showMap()">Mapa das salas</button>
+      <button class="btn secondary" onclick="showRanking()">Ranking</button>
+      <button class="btn danger" onclick="leaveGame()">Sair da missão</button>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Objetivo da operação</div>
+      <h3 id="objective">Desvende o enigma.</h3>
+      <p class="muted small">Leia o texto inteiro. Justifique suas escolhas. Respostas superficiais podem não ser suficientes nas questões discursivas.</p>
+      <div id="roomTags"></div>
+    </div>
+  </div>
+  <div id="questionCard" class="card">
+    <div class="eyebrow" id="roomNumber">SALA 01</div>
+    <h2 id="qTitle"></h2>
+    <div id="qText"></div>
+    <div id="answerArea"></div>
+    <button class="btn cyan" id="submitBtn" onclick="submitAnswer()">Verificar resposta</button>
+    <button class="btn secondary" id="hintBtn" onclick="revealHint()">Solicitar dica (penalidade)</button>
+    <div id="feedback" aria-live="polite"></div>
+  </div>
+  <div id="mapCard" class="card hidden"><h2>Mapa da operação</h2><div id="doors" class="grid"></div><button class="btn secondary" onclick="backToQuestion()">Voltar à missão</button></div>
+  <div id="rankingCard" class="card hidden"><h2>Ranking local</h2><div id="ranking"></div><button class="btn secondary" onclick="backToQuestion()">Voltar à missão</button></div>
+</section>
+
+<section id="teacher" class="hidden">
+  <div class="eyebrow">Área administrativa</div><h1>Painel do professor</h1>
+  <p class="muted">Acompanhe o progresso salvo neste navegador, consulte os resultados e reinicie uma partida.</p>
+  <div class="card">
+    <h2>Estado da competição</h2>
+    <div id="teacherStats"></div>
+    <button class="btn cyan" onclick="renderTeacher()">Atualizar painel</button>
+    <button class="btn secondary" onclick="exportResults()">Exportar resultados CSV</button>
+    <button class="btn secondary" onclick="backHome()">Voltar ao início</button>
+  </div>
+  <div class="card">
+    <h2>Configurações</h2>
+    <label for="durationInput">Duração da partida em minutos</label>
+    <input type="number" id="durationInput" min="15" max="240" value="120">
+    <button class="btn" onclick="setDuration()">Salvar duração</button>
+    <hr style="border-color:#ffffff20">
+    <button class="btn danger" onclick="resetAll()">Zerar todos os resultados deste navegador</button>
+  </div>
+</section>
+</main>
+<footer>PRÁXIS · Aprender, interpretar, argumentar e transformar.</footer>
+
 <script>
-const rooms = [
-  {"title":"A porta da CLT","typ":"múltipla escolha","q":"Qual norma é a principal referência geral para a consolidação das leis trabalhistas no Brasil?","opts":["Código Civil","Consolidação das Leis do Trabalho (CLT)","Código de Defesa do Consumidor","Constituição de 1824"],"ans":1,"hints":["A sigla tem três letras e reúne normas trabalhistas.","Seu nome começa com “Consolidação”."],"ex":"A resposta é CLT: Consolidação das Leis do Trabalho."},
-  {"title":"Vínculo de emprego","typ":"Verdadeiro ou falso","q":"Para reconhecer uma relação de emprego, analisam-se elementos como pessoalidade, não eventualidade, onerosidade e subordinação.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["Pense se a pessoa trabalha pessoalmente, recebe e se submete à direção do empregador.","Esses elementos são tradicionalmente usados para caracterizar a relação de emprego."],"ex":"Verdadeiro. A análise depende dos fatos concretos, não apenas do nome do contrato."},
-  {"title":"Código secreto","typ":"Código","q":"Decifre o código: cada número corresponde à posição da letra no alfabeto. 3-12-20.","opts":["CLT","CTP","LCT","TCL"],"ans":0,"hints":["3 = C. Continue com 12 e 20.","12 = L; 20 = T. A sigla começa com C."],"ex":"A sequência forma CLT."},
-  {"title":"Contrato em ordem","typ":"Ordenação","q":"Coloque as etapas de uma admissão em uma sequência razoável.","opts":["Definir condições e formalizar a contratação","Realizar exame admissional quando aplicável","Registrar informações nos sistemas e documentos exigidos","Iniciar as atividades conforme as condições acordadas"],"ans":0,"hints":["Comece pela definição da contratação; depois vêm as providências prévias e registros.","O exame admissional deve ocorrer antes de o trabalhador assumir a atividade; os registros legais devem ser providenciados nos prazos aplicáveis."],"ex":"Uma sequência didática possível: definir condições, exame admissional, registros exigidos e início das atividades. Os procedimentos concretos podem variar conforme o caso."},
-  {"title":"Carteira de trabalho","typ":"múltipla escolha","q":"Qual ferramenta substituiu, na maior parte dos casos, a emissão física da carteira de trabalho para registros cotidianos?","opts":["Carteira de estudante","CTPS Digital","CNH Digital","Cadastro Único"],"ans":1,"hints":["É a versão digital da Carteira de Trabalho e Previdência Social.","A sigla é CTPS."],"ex":"A CTPS Digital é o canal usado para consultar vínculos e informações trabalhistas."},
-  {"title":"Experiência","typ":"Verdadeiro ou falso","q":"O contrato de experiência pode ser prorrogado livremente quantas vezes as partes quiserem.","opts":["Verdadeiro","Falso"],"ans":1,"hints":["Contratos a prazo têm limites legais.","A CLT estabelece limite para o contrato de experiência e para sua prorrogação."],"ex":"Falso. O contrato de experiência não pode ultrapassar 90 dias e a prorrogação não pode desrespeitar as regras legais."},
-  {"title":"Jornada padrão","typ":"múltipla escolha","q":"Como regra geral constitucional, a jornada normal não deve exceder:","opts":["6 horas por dia em qualquer emprego","8 horas diárias e 44 semanais, observadas as regras e exceções","10 horas diárias sem limite semanal","12 horas diárias em todos os contratos"],"ans":1,"hints":["Pense no limite semanal de 44 horas.","A referência geral é 8 horas por dia e 44 por semana."],"ex":"A regra geral é 8 horas diárias e 44 semanais, com regimes e exceções previstos em lei."},
-  {"title":"Intervalo","typ":"Verdadeiro ou falso","q":"Em jornadas superiores a seis horas, a regra geral prevê intervalo para repouso ou alimentação, observadas as hipóteses legais e normas aplicáveis.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["O intervalo intrajornada serve para repouso e alimentação.","A CLT estabelece uma regra geral para jornadas acima de seis horas, com particularidades e possíveis ajustes legais."],"ex":"Verdadeiro."},
-  {"title":"Hora extra","typ":"múltipla escolha","q":"Qual é o adicional mínimo constitucional para o serviço extraordinário, salvo regras mais favoráveis?","opts":["10%","20%","50%","100% em todos os casos"],"ans":2,"hints":["É metade do valor da hora normal.","O percentual começa com o número 5."],"ex":"O adicional mínimo é de 50%, sem prejuízo de condições mais favoráveis ou regras específicas."},
-  {"title":"Descanso semanal","typ":"Código","q":"Qual sigla representa o descanso semanal remunerado?","opts":["DSR","FGTS","INSS","IRRF"],"ans":0,"hints":["É um descanso semanal que também é remunerado.","As letras são D, S e R."],"ex":"DSR significa descanso semanal remunerado."},
-    {"title":"Férias: período","typ":"múltipla escolha","q":"Em regra, após 12 meses de vigência do contrato, o empregado adquire:","opts":["Direito ao período aquisitivo de férias","Direito automático a 60 dias de férias","Aposentadoria proporcional","Direito a escolher qualquer data sem combinar"],"ans":0,"hints":["Esse ciclo é chamado período aquisitivo.","O período aquisitivo normalmente corresponde a 12 meses de contrato."],"ex":"O empregado adquire o direito às férias após o período aquisitivo, conforme as regras legais."},
-  {"title":"Férias em ordem","typ":"Ordenação","q":"Organize as etapas gerais relacionadas às férias.","opts":["Completar o período aquisitivo","Empregador definir a época de concessão dentro do período concessivo legal","Comunicar as férias com a antecedência legal","Pagar a remuneração de férias no prazo legal"],"ans":0,"hints":["Primeiro se adquire o direito; depois ocorre a concessão.","A comunicação deve ocorrer com antecedência e o pagamento deve respeitar o prazo previsto em lei."],"ex":"A sequência didática é aquisição, definição da época, aviso e pagamento no prazo legal."},
-  {"title":"Terço constitucional","typ":"múltipla escolha","q":"Além da remuneração normal de férias, a Constituição garante adicional de pelo menos:","opts":["Um décimo","Um terço","Metade","Dois terços"],"ans":1,"hints":["É uma fração equivalente a 1/3.","O nome popular é “terço de férias”."],"ex":"O adicional constitucional é de pelo menos um terço da remuneração de férias."},
-  {"title":"Abono pecuniário","typ":"Verdadeiro ou falso","q":"Em regra, o empregado pode converter em abono pecuniário um terço do período de férias a que tiver direito, se cumprir os requisitos e o prazo legal.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["Não é a venda de todas as férias.","A CLT permite converter parte do período em abono, mediante solicitação tempestiva."],"ex":"Verdadeiro. O abono pecuniário tem limites e prazo legal para solicitação."},
-  {"title":"13º salário","typ":"múltipla escolha","q":"O 13º salário corresponde, em regra, a:","opts":["Uma gratificação anual calculada conforme a remuneração e os meses computáveis","Um bônus facultativo em todos os empregos","Um pagamento exclusivo de quem trabalha aos domingos","Um benefício pago apenas após cinco anos"],"ans":0,"hints":["Também é conhecido como gratificação natalina.","É um direito trabalhista anual, proporcional quando aplicável."],"ex":"O 13º é uma gratificação anual, calculada conforme as regras legais e a proporção devida."},
-  {"title":"FGTS","typ":"múltipla escolha","q":"Qual afirmação sobre o FGTS está correta?","opts":["É um desconto comum de 8% do salário do empregado","O empregador deposita valores na conta vinculada, conforme a legislação","É pago somente quando há férias","Substitui o salário mensal"],"ans":1,"hints":["Em regra, o depósito é obrigação do empregador.","Não confunda depósito patronal com desconto salarial."],"ex":"O FGTS é depositado pelo empregador na conta vinculada do trabalhador, nos termos legais."},
-  {"title":"INSS","typ":"Verdadeiro ou falso","q":"A contribuição previdenciária do empregado pode variar conforme a faixa salarial e as regras vigentes.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["A contribuição não é necessariamente um percentual único para todos.","As alíquotas progressivas e limites podem mudar."],"ex":"Verdadeiro. Consulte sempre as tabelas oficiais vigentes para cálculos reais."},
-  {"title":"Salário e remuneração","typ":"múltipla escolha","q":"Qual alternativa melhor descreve a distinção geral entre salário e remuneração na CLT?","opts":["São sempre palavras com significados idênticos em qualquer contexto","Salário é pago pelo empregador; remuneração pode abranger salário e parcelas adicionais previstas em lei","Remuneração é apenas o vale-transporte","Salário só existe para servidores estatutários"],"ans":1,"hints":["A remuneração pode ser um conceito mais abrangente.","Pense em salário acrescido de parcelas que legalmente integram a remuneração."],"ex":"Em termos gerais, a remuneração pode compreender o salário e outras parcelas previstas na legislação."},
-  {"title":"Vale-transporte","typ":"Verdadeiro ou falso","q":"O vale-transporte, quando devido, pode ser usado livremente para qualquer compra pessoal.","opts":["Verdadeiro","Falso"],"ans":1,"hints":["O benefício tem finalidade específica.","Ele se destina ao deslocamento residência-trabalho e vice-versa, conforme as regras aplicáveis."],"ex":"Falso. O vale-transporte tem finalidade vinculada ao deslocamento para o trabalho."},
-  {"title":"Assédio moral","typ":"múltipla escolha","q":"Qual situação é um exemplo típico de possível assédio moral?","opts":["Feedback respeitoso e específico sobre uma tarefa","Humilhações repetidas, exposição vexatória e perseguição no trabalho","Orientação de segurança feita com respeito","Distribuição transparente de tarefas"],"ans":1,"hints":["Observe se há humilhação ou degradação reiterada.","A alternativa envolve exposição vexatória e perseguição."],"ex":"Humilhações repetidas e perseguição podem caracterizar assédio moral; a análise depende do contexto e das provas."},
-    {"title":"Assédio sexual","typ":"múltipla escolha","q":"No contexto do trabalho, qual conduta exige atenção especial como possível assédio sexual?","opts":["Convite insistente ou pressão sexual associada a constrangimento ou abuso de poder","Perguntar sobre o andamento de um relatório","Solicitar uso de equipamento de proteção","Marcar reunião de equipe"],"ans":0,"hints":["Considere a conduta de natureza sexual e o constrangimento ou abuso de poder.","Não é necessário que a situação ocorra em público para ser grave."],"ex":"Condutas de natureza sexual indesejadas, especialmente com constrangimento ou abuso de poder, devem ser levadas a sério. O enquadramento jurídico depende dos fatos."},
-  {"title":"Canal de denúncia","typ":"Verdadeiro ou falso","q":"Quem presencia assédio deve preservar informações relevantes e buscar canais seguros de denúncia, evitando divulgar dados sensíveis indiscriminadamente.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["Acolhimento, registro e canais adequados ajudam a apurar os fatos.","Evite exposição pública desnecessária; procure RH, canal de ética, sindicato ou autoridade competente conforme o caso."],"ex":"Verdadeiro. Segurança, confidencialidade e apuração adequada são importantes."},
-  {"title":"Discriminação","typ":"múltipla escolha","q":"Uma empresa rejeita candidatos qualificados exclusivamente por serem de determinada raça. Isso é:","opts":["Uma prática legítima de seleção","Possível discriminação vedada pela legislação","Uma regra de produtividade","Uma exigência universal da CLT"],"ans":1,"hints":["A decisão não usa critérios profissionais pertinentes.","A característica pessoal protegida está sendo usada como motivo de exclusão."],"ex":"É possível discriminação vedada pela legislação; decisões de seleção devem respeitar a igualdade e as normas aplicáveis."},
-  {"title":"CIPA e prevenção","typ":"múltipla escolha","q":"Qual é uma finalidade central da CIPA e das ações de prevenção?","opts":["Aumentar metas a qualquer custo","Prevenir acidentes e doenças relacionadas ao trabalho","Substituir todos os profissionais de saúde","Aplicar punições sem apuração"],"ans":1,"hints":["Pense em segurança e saúde no trabalho.","A sigla está ligada à prevenção de acidentes e assédio, conforme as normas vigentes."],"ex":"A CIPA e as ações de prevenção contribuem para um ambiente de trabalho seguro e saudável."},
-  {"title":"EPI","typ":"Verdadeiro ou falso","q":"Fornecer um EPI elimina automaticamente toda responsabilidade do empregador pela segurança no trabalho.","opts":["Verdadeiro","Falso"],"ans":1,"hints":["O equipamento é apenas uma parte da prevenção.","Também importam adequação, treinamento, fiscalização e medidas coletivas."],"ex":"Falso. O EPI é parte de um conjunto de medidas de prevenção; não elimina automaticamente responsabilidades."},
-  {"title":"Licença-maternidade","typ":"múltipla escolha","q":"Qual é a duração geral da licença-maternidade prevista na Constituição e na legislação para muitas trabalhadoras?","opts":["30 dias","60 dias","120 dias","365 dias"],"ans":2,"hints":["É um período de quatro meses.","120 dias equivalem a quatro meses."],"ex":"A duração geral é de 120 dias, podendo existir hipóteses de extensão previstas em lei ou programas específicos."},
-  {"title":"Afastamento por doença","typ":"Verdadeiro ou falso","q":"O empregado deve seguir os procedimentos de comunicação e comprovação do afastamento por motivo de saúde previstos nas regras aplicáveis.","opts":["Verdadeiro","Falso"],"ans":0,"hints":["A documentação e os prazos podem importar.","O procedimento depende da situação, da duração e das normas aplicáveis."],"ex":"Verdadeiro. É importante seguir os procedimentos legais e internos sem substituir avaliação médica."},
-  {"title":"Aviso-prévio","typ":"múltipla escolha","q":"O aviso-prévio serve, em termos gerais, para:","opts":["Comunicar antecipadamente o encerramento do contrato, conforme as regras aplicáveis","Garantir férias em dobro em qualquer situação","Substituir o registro de emprego","Eliminar todas as verbas rescisórias"],"ans":0,"hints":["É uma comunicação prévia sobre o fim do contrato.","O próprio nome indica que há um aviso com antecedência."],"ex":"O aviso-prévio comunica a rescisão e segue regras de duração, forma e efeitos conforme o caso."},
-  {"title":"Rescisão","typ":"Ordenação","q":"Na conferência de uma rescisão, qual sequência de análise é mais prudente?","opts":["Identificar o tipo e a data de desligamento","Verificar saldo salarial, férias e 13º proporcionais e demais verbas cabíveis","Conferir documentos, descontos permitidos e prazos de pagamento","Entregar os documentos e orientar o trabalhador sobre os registros aplicáveis"],"ans":0,"hints":["Antes de calcular valores, identifique como e quando ocorreu o desligamento.","As verbas variam conforme o tipo de rescisão; depois confira cálculos, prazos e documentos."],"ex":"A sequência começa por identificar a modalidade de desligamento e então verificar verbas, documentos e prazos."},
-  {"title":"Caso prático final","typ":"múltipla escolha","q":"Uma supervisora expõe repetidamente um funcionário ao ridículo, faz comentários ofensivos e ameaça prejudicá-lo quando ele pede ajuda. Qual é a melhor primeira resposta organizacional?","opts":["Ignorar porque a supervisora tem cargo superior","Orientar a vítima a pedir demissão imediatamente","Acolher, registrar os fatos com cuidado e encaminhar para canal adequado de apuração e proteção contra retaliação","Publicar os nomes nas redes sociais"],"ans":2,"hints":["Priorize acolhimento, registro seguro e apuração imparcial.","Hierarquia não autoriza humilhação. Evite exposição pública e retaliação."],"ex":"A resposta mais adequada é acolher, registrar com segurança e encaminhar para apuração por canais apropriados."}
+const TOTAL=30;
+const KEY="praxis_escape_v1";
+const initialDuration=120;
+let duration=initialDuration;
+let team=1,room=0,selected=null,answerLocked=false,timerHandle=null;
+
+const Q=[
+{cat:"Texto da vida pública",title:"A carta que não pede licença",type:"text",text:"Leia o trecho fictício de uma carta aberta publicada por moradores: “Uma praça não é um luxo ornamental. É espaço de convivência, circulação e pertencimento. Quando a prefeitura anuncia a reforma sem ouvir quem utiliza o local, transforma uma decisão coletiva em imposição administrativa. Não reivindicamos que toda proposta seja recusada; exigimos que a participação não seja reduzida a uma audiência meramente protocolar.”",ask:"Identifique a tese central e explique como a oposição entre “decisão coletiva” e “imposição administrativa” fortalece a argumentação. Escreva de 3 a 5 frases.",hint:"Observe a crítica à forma de decidir, não apenas à existência da reforma.",keys:["participacao","participação","imposicao","imposição","tese","ouvir","coletiva"]},
+{cat:"Morfossintaxe",title:"O verbo que exige testemunha",type:"mc",text:"“Os representantes entregaram o relatório à comissão durante a audiência.”",ask:"Qual análise sintática está correta?",options:["“O relatório” é objeto indireto; “à comissão” é objeto direto.","“O relatório” é objeto direto; “à comissão” é objeto indireto; “durante a audiência” é adjunto adverbial.","“Os representantes” é objeto direto; “o relatório” é sujeito.","“Durante a audiência” é complemento nominal."],correct:1,hint:"Pergunte o que foi entregue e a quem foi entregue."},
+{cat:"Literatura afro-brasileira",title:"A memória que resiste",type:"text",text:"Trecho autoral para fins didáticos: “Minha avó guardava nomes como quem protege sementes. Na sala, os retratos pareciam silenciosos; na cozinha, as histórias atravessavam gerações. Quando tentaram apagar o passado, ela pronounced cada nome em voz alta.”",ask:"Explique como a memória familiar se torna uma forma de resistência e identifique um recurso expressivo presente no trecho.",hint:"Pense na transmissão entre gerações e compare memória a sementes.",keys:["memoria","memória","resistencia","resistência","metafora","metáfora","geracoes","gerações","identidade"]},
+{cat:"Verdadeiro ou falso",title:"A armadilha do sujeito",type:"vf",text:"Considere: “Foram divulgados pela comissão os resultados da consulta pública.”",ask:"A afirmação é verdadeira ou falsa? “Os resultados da consulta pública” é o sujeito paciente da oração.",correct:"V",hint:"Passe a oração para a ordem direta: os resultados foram divulgados.",explain:"A oração está na voz passiva analítica. “Os resultados da consulta pública” é o sujeito paciente."},
+{cat:"Coesão",title:"A palavra que muda a rota",type:"mc",text:"“O projeto ampliou o acesso à biblioteca; entretanto, os horários continuaram incompatíveis com a rotina de muitos trabalhadores.”",ask:"Qual é o valor semântico de “entretanto” nesse contexto?",options:["Conclusão","Explicação","Oposição ou contraste","Finalidade"],correct:2,hint:"A segunda oração limita a avaliação positiva da primeira."},
+{cat:"Morfossintaxe",title:"O complemento disfarçado",type:"mc",text:"“A comunidade tinha necessidade de informações transparentes.”",ask:"A expressão “de informações transparentes” exerce qual função?",options:["Objeto indireto","Complemento nominal","Adjunto adnominal","Predicativo do sujeito"],correct:1,hint:"“Necessidade” é um substantivo abstrato que pede complemento."},
+{cat:"Vida pública",title:"A notícia e o enquadramento",type:"text",text:"Manchete A: “Moradores bloqueiam avenida após meses sem resposta”. Manchete B: “Trânsito é interrompido por manifestação de moradores”. Ambas descrevem o mesmo acontecimento hipotético.",ask:"Compare os enquadramentos das manchetes. Que informações cada uma põe em primeiro plano e que efeito isso pode produzir no leitor?",hint:"Uma destaca o motivo e os agentes; a outra, a consequência para a circulação.",keys:["motivo","transito","trânsito","moradores","consequencia","consequência","enquadramento","foco"]},
+{cat:"Verdadeiro ou falso",title:"A concordância sob pressão",type:"vf",text:"“Fazem três meses que o conselho publicou a ata.”",ask:"A frase está de acordo com a norma-padrão. Verdadeiro ou falso?",correct:"F",hint:"O verbo fazer indicando tempo decorrido é impessoal.",explain:"Na norma-padrão: “Faz três meses”. Nesse sentido temporal, fazer fica na terceira pessoa do singular."},
+{cat:"Literatura afro-brasileira",title:"Quem pode narrar?",type:"mc",text:"Em narrativas afro-brasileiras, a representação da experiência negra pode envolver memória ancestral, racismo, pertencimento, resistência e questionamento de estereótipos.",ask:"Qual leitura crítica evita reduzir essa literatura a um único tema?",options:["Toda obra afro-brasileira precisa narrar exclusivamente o sofrimento.","A autoria e a perspectiva importam, mas as obras podem explorar experiências, estilos, gêneros e conflitos diversos.","A literatura só pode ser considerada afro-brasileira se for escrita em versos.","A dimensão estética é irrelevante quando há crítica social."],correct:1,hint:"Evite transformar uma tradição literária diversa em uma única fórmula temática."},
+{cat:"Morfossintaxe",title:"O adjunto infiltrado",type:"mc",text:"“Os estudantes analisaram cuidadosamente o discurso na biblioteca.”",ask:"Qual expressão exerce função de adjunto adverbial de modo?",options:["Os estudantes","O discurso","Cuidadosamente","Na biblioteca"],correct:2,hint:"Pergunte como a ação de analisar foi realizada."},
+{cat:"Argumentação",title:"O argumento incompleto",type:"text",text:"“A consulta pública deve ser ampliada, pois decisões que afetam a coletividade precisam considerar diferentes experiências. Além disso, a divulgação antecipada dos documentos permite que a população formule propostas fundamentadas.”",ask:"Identifique dois argumentos que sustentam a tese e explique a relação entre eles.",hint:"Um argumento trata da pluralidade de experiências; o outro, das condições para participação informada.",keys:["experiencias","experiências","documentos","participacao","participação","propostas","fundamentadas","pluralidade"]},
+{cat:"Verdadeiro ou falso",title:"Regência em julgamento",type:"vf",text:"Na norma-padrão formal, a frase “Os estudantes assistiram ao debate” apresenta regência adequada para o sentido de ver ou presenciar.",ask:"Verdadeiro ou falso?",correct:"V",hint:"Nesse sentido, o verbo assistir rege a preposição “a”.",explain:"“Assistir ao debate” é a construção recomendada na norma-padrão para o sentido de presenciar."},
+{cat:"Texto público",title:"O pronome suspeito",type:"mc",text:"“O conselho enviou à diretoria o parecer e solicitou sua publicação.”",ask:"Qual é a principal ambiguidade do pronome “sua”?",options:["Não há verbo na oração.","Não é possível determinar com absoluta segurança, apenas pelo contexto dado, a quem ou a que a publicação se refere.","O pronome está obrigatoriamente no plural.","O pronome transforma a oração em voz passiva."],correct:1,hint:"Considere que mais de um referente pode ser associado ao contexto."},
+{cat:"Morfossintaxe",title:"A ordem dos termos",type:"order",text:"Organize a análise dos termos destacados na oração: “A pesquisadora apresentou os resultados aos participantes ontem.”",ask:"Digite a sequência das funções correspondentes a: “A pesquisadora” / “os resultados” / “aos participantes” / “ontem”. Separe por vírgulas.",order:["sujeito","objeto direto","objeto indireto","adjunto adverbial"],hint:"Quem apresentou? O que apresentou? A quem? Quando?",keys:["sujeito","objeto direto","objeto indireto","adjunto adverbial"]},
+{cat:"Literatura afro-brasileira",title:"A voz e o silêncio",type:"text",text:"Trecho autoral: “No formulário, havia apenas duas opções para descrever sua história. Ela fechou a caneta. Nenhuma caixa comportava o nome que aprendera com os mais velhos.”",ask:"Interprete a crítica sugerida pela imagem das caixas do formulário. Relacione forma burocrática, identidade e apagamento simbólico.",hint:"A classificação administrativa pode ser insuficiente para representar identidades e histórias.",keys:["identidade","apagamento","burocr","classifica","historia","história","ancestral","reducao","redução"]},
+{cat:"Coesão",title:"A referência perdida",type:"mc",text:"“A comissão analisou a proposta da associação depois de revisar o relatório. Ela recomendou uma nova consulta.”",ask:"Qual é o problema de coesão mais evidente?",options:["Ausência de pontuação final.","Ambiguidade referencial do pronome “ela”.","Uso obrigatório da voz passiva.","Erro de concordância nominal."],correct:1,hint:"O pronome pode retomar mais de um grupo nominal."},
+{cat:"Verdadeiro ou falso",title:"A voz passiva",type:"vf",text:"“A ata foi redigida pela secretária.”",ask:"A expressão “pela secretária” é agente da passiva. Verdadeiro ou falso?",correct:"V",hint:"Identifique quem pratica a ação expressa pelo verbo na voz passiva.",explain:"A secretária é quem redige a ata; portanto, “pela secretária” é o agente da passiva."},
+{cat:"Vida pública",title:"O dado que não prova tudo",type:"text",text:"Uma campanha divulga: “Após a implantação do programa, as reclamações caíram 30%”. O comunicado não apresenta números absolutos, período de comparação, perfil dos participantes nem informações sobre outros fatores que poderiam explicar a queda.",ask:"Explique por que o dado isolado não basta para demonstrar que o programa causou a redução. Indique pelo menos duas informações adicionais necessárias.",hint:"Associação temporal não comprova, sozinha, causalidade. Pense em comparação, período e variáveis concorrentes.",keys:["causal","comparacao","comparação","periodo","período","fatores","variaveis","variáveis","numero","número","amostra"]},
+{cat:"Morfossintaxe",title:"A oração encaixada",type:"mc",text:"“É necessário que os documentos sejam publicados antes da votação.”",ask:"A oração “que os documentos sejam publicados antes da votação” é:",options:["Subordinada substantiva subjetiva","Subordinada adverbial causal","Subordinada adjetiva explicativa","Coordenada sindética adversativa"],correct:0,hint:"Pergunte o que é necessário: a oração inteira ocupa a função de sujeito."},
+{cat:"Literatura afro-brasileira",title:"Intertextualidade e ancestralidade",type:"text",text:"Trecho autoral: “Ela costurou no tecido o nome da bisavó, embora o arquivo oficial registrasse apenas um número. Cada ponto era uma pergunta dirigida ao silêncio dos documentos.”",ask:"Analise o contraste entre tecido e arquivo oficial. Explique como o texto constrói uma reflexão sobre memória e registro histórico.",hint:"Compare a memória afetiva e familiar com a classificação impessoal dos documentos.",keys:["memoria","memória","arquivo","ancestral","registro","historico","histórico","silencio","silêncio","identidade"]},
+{cat:"Revisão textual",title:"A concordância coletiva",type:"mc",text:"Assinale a frase adequada à norma-padrão.",ask:"Qual alternativa apresenta concordância verbal correta?",options:["Houveram diversas manifestações na audiência.","Existe propostas relevantes no relatório.","Faltam informações para avaliar a medida.","Fazem dois anos que o conselho existe."],correct:2,hint:"Verifique o sujeito de “faltam” e os verbos impessoais haver e fazer."},
+{cat:"Verdadeiro ou falso",title:"O valor da vírgula",type:"vf",text:"Compare: “Os estudantes que revisaram o texto identificaram a ambiguidade.”",ask:"A oração “que revisaram o texto”, sem vírgulas, restringe o conjunto de estudantes mencionado. Verdadeiro ou falso?",correct:"V",hint:"Sem vírgulas, a oração adjetiva delimita quais estudantes estão sendo mencionados.",explain:"A oração adjetiva restritiva seleciona os estudantes que revisaram o texto."},
+{cat:"Argumentação",title:"A falácia da generalização",type:"mc",text:"“Dois estudantes não entregaram a atividade. Portanto, todos os estudantes desta turma são irresponsáveis.”",ask:"Que problema argumentativo aparece nessa conclusão?",options:["Argumento de autoridade","Generalização precipitada","Raciocínio por analogia bem fundamentado","Definição operacional"],correct:1,hint:"A conclusão universal extrapola a evidência de apenas dois casos."},
+{cat:"Morfossintaxe",title:"O predicativo escondido",type:"mc",text:"“A comissão considerou insuficiente a justificativa apresentada.”",ask:"Qual é a função sintática de “insuficiente”?",options:["Adjunto adnominal","Predicativo do objeto","Objeto indireto","Aposto"],correct:1,hint:"O termo atribui uma característica ao objeto “a justificativa apresentada” por meio do verbo considerar."},
+{cat:"Literatura afro-brasileira",title:"A leitura das entrelinhas",type:"text",text:"Trecho autoral: “Quando lhe perguntaram de onde vinha, respondeu com o nome de três rios, duas cidades e uma história que não cabia no mapa. O entrevistador repetiu a pergunta, como se a primeira resposta não tivesse existido.”",ask:"Explique como a repetição da pergunta produz um efeito de apagamento da voz da personagem. Comente também o sentido da imagem do mapa.",hint:"A personagem oferece uma identidade complexa, mas o interlocutor insiste em uma resposta simplificada.",keys:["apagamento","voz","identidade","complexa","reducao","redução","mapa","pluralidade","silenciamento"]},
+{cat:"Vida pública",title:"A fonte e a credibilidade",type:"mc",text:"Uma publicação viral afirma que uma nova lei já está em vigor, mas não cita número da lei, data de publicação nem órgão oficial. Uma segunda postagem reproduz a primeira sem acrescentar fontes.",ask:"Qual procedimento de verificação é mais consistente?",options:["Compartilhar a notícia porque duas páginas a divulgaram.","Considerar a repetição como prova de veracidade.","Buscar a norma em fonte oficial, verificar sua publicação, vigência e contexto.","Aceitar a postagem com mais curtidas."],correct:2,hint:"Repetição não equivale a confirmação independente."},
+{cat:"Sintaxe e sentido",title:"A pontuação estratégica",type:"text",text:"Compare: A) “Vamos ouvir os moradores que apresentaram propostas.” B) “Vamos ouvir os moradores, que apresentaram propostas.”",ask:"Explique a diferença de sentido criada pelas vírgulas. Considere o alcance da informação sobre os moradores.",hint:"Na primeira frase, a oração delimita um subconjunto; na segunda, acrescenta uma informação sobre os moradores mencionados.",keys:["restritiva","explicativa","subconjunto","todos","virgula","vírgula","delimita","acrescenta"]},
+{cat:"Desafio final",title:"O dossiê das contradições",type:"text",text:"Dossiê fictício: “A administração afirma que a consulta foi ampla. O relatório registra 18 participantes, sem indicar quantas pessoas foram convidadas. A ata informa que a reunião ocorreu às 14h, mas o convite público divulgado no mesmo canal indicava 19h. O comunicado final conclui que houve consenso, embora duas manifestações contrárias estejam anexadas ao documento.”",ask:"Produza uma análise de 6 a 10 frases: identifique pelo menos três problemas de coerência ou de fundamentação, explique a relevância de cada um e proponha duas medidas para tornar a decisão pública mais transparente. A resposta deve articular evidências do dossiê.",hint:"Investigue representatividade, divergência de horários e diferença entre consenso e existência de objeções. Sugira medidas verificáveis.",keys:["participantes","convidados","horario","horário","consenso","contrarias","contrárias","transparencia","transparência","publicidade","representatividade","convocacao","convocação"]},
+{cat:"Código final",title:"A senha da cidadania",type:"text",text:"Para abrir a última porta, retome os princípios presentes nas missões: participação pública, leitura crítica, rigor linguístico, memória e argumentação baseada em evidências.",ask:"Escreva um parágrafo de 5 a 7 frases respondendo: de que maneira a leitura crítica da linguagem contribui para o exercício da cidadania? Use ao menos três conceitos estudados nas salas anteriores.",hint:"Relacione linguagem, poder, participação, evidência, identidade ou argumentação.",keys:["linguagem","cidadania","participacao","participação","critica","crítica","evidencia","evidência","argumentacao","argumentação"]}
 ];
 
-let current=0, done=new Set(), hintLevel=0, hintsUsed=0, selected=null, orderValues=[], started=false, ended=false, seconds=3600, timerId=null;
-const $=id=>document.getElementById(id);
+function freshState(){
+ return {teams:{
+  1:{name:"Equipe 1",points:3000,errors:0,room:0,done:[],hints:{},started:null,finished:null,elapsed:0},
+  2:{name:"Equipe 2",points:3000,errors:0,room:0,done:[],hints:{},started:null,finished:null,elapsed:0}
+ },duration:initialDuration};
+}
+function loadState(){
+ try{return JSON.parse(localStorage.getItem(KEY))||freshState()}catch(e){return freshState()}
+}
+let state=loadState();
+if(!state.teams||!state.teams[1]||!state.teams[2])state=freshState();
+if(!state.duration)state.duration=initialDuration;
+duration=state.duration;
 
-function fmt(s){
- return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function norm(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^\p{L}\p{N}\s]/gu," ").replace(/\s+/g," ").trim()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function current(){return state.teams[team]}
+function elapsed(t){
+ if(!t.started)return t.elapsed||0;
+ return (t.elapsed||0)+Math.floor((Date.now()-t.started)/1000);
+}
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+
+function updateQR(){
+ const base=location.href.split("#")[0];
+ document.getElementById("qr1").src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data="+encodeURIComponent(base+"#equipe=1");
+ document.getElementById("qr2").src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data="+encodeURIComponent(base+"#equipe=2");
 }
 
-function buildMap(){
- $('roomsMap').innerHTML='';
- rooms.forEach((r,i)=>{
-  const b=document.createElement('button');
-  b.className='roomdot'+(i===current?' current':'')+(done.has(i)?' done':'');
-  b.textContent=done.has(i)?'✓':i+1;
-  b.disabled=true;
-  b.title=r.title;
-  $('roomsMap').appendChild(b);
- });
- const p=Math.round(done.size/rooms.length*100);
- $('progress').style.width=p+'%';
- $('percent').textContent=p+'%';
- $('score').textContent=done.size+' / 30';
- $('hintsCount').textContent=hintsUsed;
+function joinTeam(n){
+ team=n;
+ const t=current();
+ const name=document.getElementById("teamName").value.trim();
+ if(name)t.name=name;
+ if(!t.started&&!t.finished)t.started=Date.now();
+ save();
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("teacher").classList.add("hidden");
+ document.getElementById("game").classList.remove("hidden");
+ room=Math.min(t.room,TOTAL-1);
+ startClock();renderQuestion();
 }
 
-function startGame(){
- if(started)return;
- started=true;
- $('actions').innerHTML='';
- timerId=setInterval(()=>{
-  if(ended)return;
-  seconds--;
-  $('timer').textContent=fmt(Math.max(0,seconds));
-  if(seconds<=0)finish(false);
- },1000);
- renderRoom();
+function leaveGame(){
+ if(timerHandle)clearInterval(timerHandle);
+ timerHandle=null;
+ document.getElementById("game").classList.add("hidden");
+ document.getElementById("home").classList.remove("hidden");
+ renderTeacher();
 }
 
-function renderRoom(){
- if(ended)return;
- const r=rooms[current];
- hintLevel=0;
- selected=null;
- orderValues=[];
- $('typePill').textContent=r.typ;
- $('roomNumber').textContent='Sala '+(current+1)+' de '+rooms.length;
- $('roomTitle').textContent=r.title;
- $('question').textContent=r.q;
- $('feedback').className='feedback';
- $('feedback').textContent='';
- $('hintBox').className='hint';
- $('hintBox').innerHTML='';
- $('answerArea').innerHTML='';
- $('actions').innerHTML='';
-
- if(r.typ==='Ordenação'){
-  const box=document.createElement('div');
-  box.className='order-box';
-  const shuffled=r.opts.map((v,i)=>({v,orig:i})).sort(()=>Math.random()-.5);
-  orderValues=shuffled.map(x=>x.orig);
-
-  for(let i=0;i<r.opts.length;i++){
-   const row=document.createElement('div');
-   row.className='order-row';
-   const n=document.createElement('span');
-   n.textContent=(i+1)+'.';
-   const sel=document.createElement('select');
-   sel.dataset.slot=i;
-   sel.innerHTML='<option value="">Escolha a etapa…</option>'+
-    shuffled.map(x=>`<option value="${x.orig}">${x.v}</option>`).join('');
-   row.append(n,sel);
-   box.appendChild(row);
-  }
-  $('answerArea').appendChild(box);
- }else{
-  const box=document.createElement('div');
-  box.className='answers';
-  r.opts.forEach((opt,i)=>{
-   const b=document.createElement('button');
-   b.className='answer';
-   b.innerHTML=`<span class="letter">${String.fromCharCode(65+i)}</span><span>${opt}</span>`;
-   b.onclick=()=>{
-    selected=i;
-    box.querySelectorAll('.answer').forEach(x=>x.classList.remove('selected'));
-    b.classList.add('selected');
-   };
-   box.appendChild(b);
-  });
-  $('answerArea').appendChild(box);
- }
-
- const check=document.createElement('button');
- check.className='btn primary';
- check.textContent='Validar resposta';
- check.onclick=checkAnswer;
- $('actions').appendChild(check);
-
- const hint=document.createElement('button');
- hint.className='btn secondary';
- hint.textContent='💡 Pedir dica';
- hint.onclick=showHint;
- $('actions').appendChild(hint);
-
- const reset=document.createElement('button');
- reset.className='btn secondary';
- reset.textContent='Limpar';
- reset.onclick=()=>renderRoom();
- $('actions').appendChild(reset);
-
- buildMap();
+function backHome(){
+ document.getElementById("teacher").classList.add("hidden");
+ document.getElementById("game").classList.add("hidden");
+ document.getElementById("home").classList.remove("hidden");
 }
 
-function checkAnswer(){
- if(ended)return;
- const r=rooms[current];
- let correct=false;
-
- if(r.typ==='Ordenação'){
-  const vals=[...$('answerArea').querySelectorAll('select')].map(s=>s.value);
-  if(vals.some(v=>v==='')){
-   feedback('error','Organize todas as etapas antes de validar.');
-   return;
-  }
-  correct=vals.every((v,i)=>Number(v)===i);
- }else{
-  if(selected===null){
-   feedback('error','Escolha uma resposta antes de validar.');
-   return;
-  }
-  correct=selected===r.ans;
- }
-
- if(correct){
-  done.add(current);
-  feedback('success','🔓 Sala liberada! '+r.ex);
-  $('actions').innerHTML='';
-
-  const next=document.createElement('button');
-  next.className='btn primary';
-  next.textContent=current===rooms.length-1?'Concluir missão 🏆':'Próxima sala →';
-  next.onclick=()=>{
-   if(current===rooms.length-1)finish(true);
-   else{
-    current++;
-    renderRoom();
+function startClock(){
+ if(timerHandle)clearInterval(timerHandle);
+ timerHandle=setInterval(()=>{
+   const t=current();
+   if(!t.started||t.finished)return;
+   const remain=duration*60-elapsed(t);
+   document.getElementById("timer").textContent=fmt(remain);
+   if(remain<=0){
+     t.elapsed=duration*60;t.started=null;t.finished=Date.now();save();
+     clearInterval(timerHandle);timerHandle=null;
+     renderQuestion();
+     alert("Tempo encerrado! A equipe concluiu "+t.done.length+" salas.");
    }
-  };
-  $('actions').appendChild(next);
-  buildMap();
- }else{
-  let msg='Ainda não. Tente novamente.';
-  if(r.typ==='Ordenação')msg='A ordem ainda não está correta. Releia as etapas e use uma dica se precisar.';
-  else if(r.typ==='Verdadeiro ou falso')msg='Essa afirmação não foi avaliada corretamente. Releia cada palavra e pense na regra geral.';
-  feedback('error','🔒 '+msg+' Você pode tentar novamente ou pedir uma dica.');
+ },1000);
+}
+
+function renderQuestion(){
+ const t=current();
+ const card=document.getElementById("questionCard");
+ card.classList.remove("hidden");
+ document.getElementById("mapCard").classList.add("hidden");
+ document.getElementById("rankingCard").classList.add("hidden");
+
+ if(t.finished&&t.done.length<TOTAL){
+   card.innerHTML="<h2>Missão encerrada</h2><p>O tempo acabou ou a equipe finalizou a partida.</p><button class='btn' onclick='showRanking()'>Ver ranking</button>";
+   return;
  }
-}
+ if(t.done.length>=TOTAL){finishGame();return;}
 
-function feedback(type,msg){
- $('feedback').className='feedback show '+type;
- $('feedback').textContent=msg;
-}
-
-function showHint(){
- const r=rooms[current];
- if(hintLevel<r.hints.length){
-  $('hintBox').className='hint show';
-  $('hintBox').innerHTML='<strong>Dica '+(hintLevel+1)+':</strong> '+r.hints[hintLevel];
-  hintLevel++;
-  hintsUsed++;
-  $('hintsCount').textContent=hintsUsed;
+ room=t.room;
+ const q=Q[room];
+ selected=null;answerLocked=false;
+ 
+ document.getElementById("gTeam").textContent=t.name;
+ document.getElementById("points").textContent=t.points;
+ document.getElementById("errors").textContent=t.errors;
+ document.getElementById("timer").textContent=fmt(duration*60-elapsed(t));
+ document.getElementById("progressLabel").textContent="Salas concluídas: "+t.done.length+" de "+TOTAL;
+ document.getElementById("progressBar").style.width=(t.done.length/TOTAL*100)+"%";
+ document.getElementById("objective").textContent="Decifre a Sala "+String(room+1).padStart(2,"0");
+ document.getElementById("roomNumber").textContent="SALA "+String(room+1).padStart(2,"0")+" / "+TOTAL;
+ document.getElementById("qTitle").textContent=q.title;
+ document.getElementById("roomTags").innerHTML="<span class='badge'>"+esc(q.cat)+"</span><span class='badge'>Desafio "+(room+1)+"</span>";
+ document.getElementById("qText").innerHTML="<p>"+esc(q.text)+"</p><p><strong>"+esc(q.ask)+"</strong></p>";
+ document.getElementById("feedback").textContent="";
+ 
+ const a=document.getElementById("answerArea");
+ a.innerHTML="";
+ if(q.type==="mc"){
+   q.options.forEach((op,i)=>{
+    const b=document.createElement("button");b.className="option";b.textContent=String.fromCharCode(65+i)+") "+op;
+    b.onclick=()=>{if(answerLocked)return;selected=i;[...a.querySelectorAll(".option")].forEach(x=>x.classList.remove("selected"));b.classList.add("selected")};
+    a.appendChild(b);
+   });
+ }else if(q.type==="vf"){
+   ["V","F"].forEach(v=>{
+    const b=document.createElement("button");b.className="option";b.textContent=v==="V"?"Verdadeiro":"Falso";
+    b.onclick=()=>{if(answerLocked)return;selected=v;[...a.querySelectorAll(".option")].forEach(x=>x.classList.remove("selected"));b.classList.add("selected")};
+    a.appendChild(b);
+   });
  }else{
-  $('hintBox').className='hint show';
-  $('hintBox').innerHTML='<strong>Orientação:</strong> '+r.ex;
+   const label=document.createElement("label");
+   label.textContent=q.type==="order"?"Sequência de funções sintáticas":"Resposta escrita";
+   a.appendChild(label);
+   const inp=document.createElement("textarea");inp.id="writtenAnswer";
+   inp.placeholder=q.type==="order"?"Ex.: sujeito, objeto direto, objeto indireto, adjunto adverbial":"Escreva sua análise com justificativas e evidências do texto.";
+   a.appendChild(inp);
  }
+ document.getElementById("submitBtn").disabled=false;
+ document.getElementById("submitBtn").textContent="Verificar resposta";
+ document.getElementById("hintBtn").disabled=false;
 }
 
-function finish(won){
- ended=true;
- clearInterval(timerId);
- $('overlay').classList.add('show');
- $('modalIcon').textContent=won?'🏆':'⏰';
- $('modalTitle').textContent=won?'Missão concluída!':'Tempo esgotado!';
- $('modalText').textContent=won
-  ?'Parabéns! Você liberou as 30 salas e concluiu a Operação CLT.'
-  :'O tempo terminou. Você concluiu '+done.size+' de 30 salas. Revise os temas e tente novamente.';
- $('modalExtra').innerHTML='<p><strong>Resultado: '+done.size+'/30 salas</strong><br>Tempo restante: '+fmt(Math.max(0,seconds))+'<br>Dicas utilizadas: '+hintsUsed+'</p><p class="smallprint">Este resultado é apenas um resumo local no navegador; não é enviado automaticamente ao professor.</p>';
+function checkAnswer(q){
+ if(q.type==="mc")return selected===q.correct;
+ if(q.type==="vf")return selected===q.correct;
+ const val=norm(document.getElementById("writtenAnswer")?.value||"");
+ if(!val)return false;
+ if(q.type==="order"){
+   const parts=val.split(",").map(norm);
+   return parts.length===q.order.length&&parts.every((x,i)=>x===norm(q.order[i]));
+ }
+ const minWords=q.title.includes("Código final")?35:q.title.includes("dossiê")?45:15;
+ const words=val.split(/\s+/).filter(Boolean);
+ const keyHits=q.keys.filter(k=>val.includes(norm(k))).length;
+ return words.length>=minWords&&keyHits>=Math.min(2,q.keys.length);
 }
 
-function restart(){
- clearInterval(timerId);
- current=0;
- done=new Set();
- hintLevel=0;
- hintsUsed=0;
- selected=null;
- orderValues=[];
- started=false;
- ended=false;
- seconds=3600;
- $('timer').textContent='60:00';
- $('overlay').classList.remove('show');
- $('roomTitle').textContent='Você consegue escapar?';
- $('typePill').textContent='Preparação';
- $('roomNumber').textContent='Missão de 60 minutos';
- $('question').textContent='Sua equipe está presa no arquivo central de Recursos Humanos. Para sair, será necessário resolver 30 desafios sobre direitos, deveres e boas práticas no trabalho.';
- $('answerArea').innerHTML='';
- $('feedback').className='feedback';
- $('hintBox').className='hint';
- $('actions').innerHTML='<button class="btn primary" id="startBtn">Iniciar missão →</button>';
- $('startBtn').onclick=startGame;
- buildMap();
+function submitAnswer(){
+ if(answerLocked)return;
+ const q=Q[room],t=current();
+ if(q.type==="mc"||q.type==="vf"){
+  if(selected===null){document.getElementById("feedback").textContent="⚠️ Escolha uma alternativa antes de continuar.";return}
+ }else if(!document.getElementById("writtenAnswer").value.trim()){
+  document.getElementById("feedback").textContent="⚠️ Escreva sua resposta antes de continuar.";return
+ }
+ const ok=checkAnswer(q);
+ if(!ok){
+   t.errors++;t.points=Math.max(0,t.points-100);
+   const used=t.hints[room]||0;
+   t.hints[room]=used+1;
+   save();updateStats();
+   document.getElementById("feedback").textContent="❌ Resposta ainda não validada.\nVocê perdeu 100 pontos e recebeu uma pista.\n\n"+getHint(q,used)+"\n\nReleia o enunciado, revise sua resposta e tente novamente.";
+   return
+ }
+ answerLocked=true;
+ t.done.push(room);
+ t.room=room+1;
+ t.points=Math.max(0,t.points+50);
+ save();
+ document.getElementById("submitBtn").disabled=true;
+ document.getElementById("hintBtn").disabled=true;
+ let detail=q.explain?"\n\n"+q.explain:"";
+ document.getElementById("feedback").textContent="✅ Resposta aceita! +50 pontos.\nSala concluída. "+detail+"\n\nPreparando o próximo desafio...";
+ updateStats();
+ setTimeout(()=>{if(current().done.length>=TOTAL)finishGame();else renderQuestion()},1800);
 }
 
-$('startBtn').onclick=startGame;
-$('restartBtn').onclick=restart;
-buildMap();
+function getHint(q,used){
+ const hints=[q.hint,"Releia cada oração e destaque as palavras que sustentam sua interpretação.","Converse com o grupo e compare duas interpretações possíveis antes de responder."];
+ return "💡 DICA: "+hints[Math.min(used,hints.length-1)];
+}
+
+function revealHint(){
+ const t=current(),q=Q[room],used=t.hints[room]||0;
+ if(used===0){t.points=Math.max(0,t.points-50);t.hints[room]=1;save();document.getElementById("feedback").textContent="💡 DICA SOLICITADA: "+q.hint+"\nPenalidade: -50 pontos.";updateStats()}
+ else document.getElementById("feedback").textContent=getHint(q,Math.min(used,2))+"\nAs dicas adicionais não retiram pontos.";
+}
+
+function updateStats(){
+ const t=current();
+ document.getElementById("points").textContent=t.points;
+ document.getElementById("errors").textContent=t.errors;
+ document.getElementById("progressLabel").textContent="Salas concluídas: "+t.done.length+" de "+TOTAL;
+ document.getElementById("progressBar").style.width=(t.done.length/TOTAL*100)+"%";
+ save();
+}
+
+function finishGame(){
+ const t=current();
+ if(!t.finished){t.elapsed=elapsed(t);t.started=null;t.finished=Date.now();save()}
+ document.getElementById("questionCard").innerHTML="<div class='eyebrow'>Missão concluída</div><h2>🏆 Você abriu a última porta!</h2><p>Equipe: "+esc(t.name)+"</p><div class='stats'><div class='stat'>Pontos<strong>"+t.points+"</strong></div><div class='stat'>Erros<strong>"+t.errors+"</strong></div><div class='stat'>Tempo<strong>"+fmt(t.elapsed)+"</strong></div></div><p>Consulte o ranking para comparar os resultados.</p><button class='btn gold' onclick='showRanking()'>Ver classificação</button><button class='btn secondary' onclick='showMap()'>Rever mapa</button>";
+ if(timerHandle)clearInterval(timerHandle);
+ timerHandle=null;
+}
+
+function showMap(){
+ document.getElementById("questionCard").classList.add("hidden");
+ document.getElementById("rankingCard").classList.add("hidden");
+ document.getElementById("mapCard").classList.remove("hidden");
+ const t=current();
+ document.getElementById("doors").innerHTML=Q.map((q,i)=>{
+  const done=t.done.includes(i),active=i===t.room&&!t.finished,locked=i>t.room;
+  return "<div class='door "+(done?"done":active?"current":locked?"locked":"")+"'><strong>"+(done?"✓":String(i+1).padStart(2,"0"))+"</strong><p class='small'>"+esc(q.title)+"</p><span class='small'>"+(done?"Concluída":active?"Em andamento":"Bloqueada")+"</span></div>";
+ }).join("");
+}
+
+function showRanking(){
+ document.getElementById("questionCard").classList.add("hidden");
+ document.getElementById("mapCard").classList.add("hidden");
+ document.getElementById("rankingCard").classList.remove("hidden");
+ const arr=Object.values(state.teams).sort((a,b)=>{
+  if(a.done.length!==b.done.length)return b.done.length-a.done.length;
+  if(a.points!==b.points)return b.points-a.points;
+  if(a.errors!==b.errors)return a.errors-b.errors;
+  return elapsed(a)-elapsed(b);
+ });
+ document.getElementById("ranking").innerHTML="<table><thead><tr><th>Pos.</th><th>Equipe</th><th>Salas</th><th>Pontos</th><th>Erros</th><th>Tempo</th></tr></thead><tbody>"+arr.map((t,i)=>"<tr><td>"+(i+1)+"º</td><td>"+esc(t.name)+"</td><td>"+t.done.length+"/30</td><td>"+t.points+"</td><td>"+t.errors+"</td><td>"+fmt(elapsed(t))+"</td></tr>").join("")+"</tbody></table><p class='small muted'>Critérios: maior número de salas concluídas, maior pontuação, menor número de erros e menor tempo.</p>";
+}
+
+function backToQuestion(){document.getElementById("mapCard").classList.add("hidden");document.getElementById("rankingCard").classList.add("hidden");document.getElementById("questionCard").classList.remove("hidden")}
+
+function showTeacher(){
+ if(timerHandle){clearInterval(timerHandle);timerHandle=null}
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("game").classList.add("hidden");
+ document.getElementById("teacher").classList.remove("hidden");
+ renderTeacher();
+}
+
+function renderTeacher(){
+ const arr=Object.values(state.teams);
+ document.getElementById("durationInput").value=state.duration;
+ document.getElementById("teacherStats").innerHTML="<table><thead><tr><th>Equipe</th><th>Salas</th><th>Progresso</th><th>Pontos</th><th>Erros</th><th>Tempo decorrido</th><th>Status</th></tr></thead><tbody>"+arr.map(t=>"<tr><td>"+esc(t.name)+"</td><td>"+t.done.length+"/30</td><td>"+Math.round(t.done.length/TOTAL*100)+"%</td><td>"+t.points+"</td><td>"+t.errors+"</td><td>"+fmt(elapsed(t))+"</td><td>"+(t.finished?"Encerrada":t.started?"Em andamento":"Não iniciada")+"</td></tr>").join("")+"</tbody></table><p class='muted small'>Este painel mostra os dados armazenados neste navegador.</p>";
+}
+
+function setDuration(){
+ const v=Number(document.getElementById("durationInput").value);
+ if(!Number.isFinite(v)||v<15||v>240){alert("Escolha entre 15 e 240 minutos.");return}
+ state.duration=v;duration=v;save();alert("Duração salva para novas partidas.");
+}
+
+function exportResults(){
+ const rows=[["Equipe","Salas","Pontos","Erros","Tempo_segundos","Finalizada"],...Object.values(state.teams).map(t=>[t.name,t.done.length,t.points,t.errors,elapsed(t),t.finished?"Sim":"Não"])];
+ const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(";")).join("\r\n");
+ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="praxis_resultados.csv";a.click();URL.revokeObjectURL(url);
+}
+
+function resetAll(){
+ if(!confirm("Tem certeza? Todos os resultados locais serão apagados."))return;
+ if(!confirm("Confirme novamente para zerar a competição."))return;
+ state=freshState();duration=state.duration;save();
+ if(timerHandle)clearInterval(timerHandle);
+ timerHandle=null;backHome();renderTeacher();
+}
+
+updateQR();
+const hash=location.hash.match(/equipe=(1|2)/);
+if(hash){
+ document.getElementById("teamSelect").value=hash[1];
+}
 </script>
 </body>
 </html>
