@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape Room RH — Operação CLT</title>
+
+<style>
+:root {
+  --bg: #0b1020;
+  --panel: #141c31;
+  --text: #f4f7ff;
+  --muted: #aab6d3;
+  --cyan: #55e6d1;
+  --purple: #a99bff;
+  --gold: #ffd166;
+  --good: #70e1a1;
+  --bad: #ff7b85;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(
+    ellipse at top,
+    #202e52 0%,
+    #0b1020 58%
+  );
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+button, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: auto;
+  padding: 22px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  display: grid;
+  place-items: center;
+  color: #10182a;
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.eyebrow {
+  color: var(--cyan);
+  font-size: .76rem;
+  letter-spacing: .16em;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(1.45rem, 3vw, 2.15rem);
+  margin: 2px 0;
+}
+
+.sub {
+  color: var(--muted);
+  margin: 0;
+  font-size: .92rem;
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: #111a2d;
+  border: 1px solid #2b3958;
+  padding: 10px 14px;
+  border-radius: 14px;
+  min-width: 100px;
+}
+
+.stat small {
+  display: block;
+  color: var(--muted);
+  font-size: .72rem;
+  text-transform: uppercase;
+}
+
+.stat strong {
+  font-size: 1.2rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.panel {
+  background: linear-gradient(160deg, #17213aee, #11192bed);
+  border: 1px solid #2a3859;
+  border-radius: 22px;
+  box-shadow: 0 18px 50px #0003;
+}
+
+.sidebar {
+  padding: 18px;
+  height: max-content;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-weight: 800;
+}
+
+.progressbar {
+  height: 8px;
+  background: #293551;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 10px 0 17px;
+}
+
+.progressbar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  transition: width .3s;
+}
+
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.roomdot {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  background: #202b45;
+  color: #9caccb;
+  border: 1px solid #354362;
+  font-weight: 800;
+}
+
+.roomdot.current {
+  background: var(--cyan);
+  color: #10182a;
+}
+
+.roomdot.done {
+  background: #194d48;
+  color: #9df4d0;
+}
+
+.sidebar-note {
+  color: var(--muted);
+  font-size: .82rem;
+  line-height: 1.5;
+  margin-top: 17px;
+}
+
+.game {
+  padding: clamp(20px, 4vw, 36px);
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+}
+
+.room-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.pill {
+  border: 1px solid #354566;
+  border-radius: 999px;
+  padding: 7px 11px;
+  color: var(--cyan);
+  font-size: .78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.room-number {
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+h2 {
+  font-size: clamp(1.45rem, 3vw, 2.15rem);
+  line-height: 1.15;
+  margin: 0 0 14px;
+}
+
+.question {
+  font-size: 1.07rem;
+  line-height: 1.65;
+  color: #e5ebfa;
+  margin: 0 0 22px;
+}
+
+.answers {
+  display: grid;
+  gap: 10px;
+}
+
+.answer {
+  text-align: left;
+  background: #1b2742;
+  color: var(--text);
+  border: 1px solid #344463;
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.4;
+}
+
+.answer.selected {
+  border-color: var(--purple);
+  background: #302b54;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.btn {
+  padding: 12px 17px;
+  border-radius: 12px;
+  font-weight: 850;
+}
+
+.primary {
+  background: var(--cyan);
+  color: #0b1725;
+}
+
+.secondary {
+  background: #263451;
+  color: var(--text);
+  border: 1px solid #3a4b6f;
+}
+
+.feedback, .hint {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  line-height: 1.5;
+  display: none;
+}
+
+.feedback.show, .hint.show {
+  display: block;
+}
+
+.feedback.error {
+  background: #4a202f;
+  color: #ffdce2;
+}
+
+.feedback.success {
+  background: #163d38;
+  color: #c9ffeb;
+}
+
+.hint {
+  background: #2d2b49;
+  color: #e2dcff;
+}
+
+.bottomline {
+  margin-top: auto;
+  padding-top: 26px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: .82rem;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #070b16ef;
+  z-index: 5;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.overlay.show {
+  display: flex;
+}
+
+.modal {
+  max-width: 620px;
+  width: 100%;
+  padding: 35px;
+  text-align: center;
+  background: #151f37;
+  border: 1px solid #3a4b70;
+  border-radius: 25px;
+}
+
+@media (max-width: 760px) {
+  .wrap {
+    padding: 14px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    order: 2;
+  }
+
+  .rooms {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+
+  .stats {
+    width: 100%;
+  }
+
+  .stat {
+    flex: 1;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">
+    <div class="logo">RH</div>
+    <div>
+      <div class="eyebrow">Missão de aprendizagem</div>
+      <h1>Operação CLT</h1>
+      <p class="sub">Escape Room • Regime celetista • 30 salas</p>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <small>Tempo restante</small>
+      <strong id="timer">60:00</strong>
+    </div>
+    <div class="stat">
+      <small>Salas concluídas</small>
+      <strong id="score">0 / 30</strong>
+    </div>
+    <div class="stat">
+      <small>Dicas usadas</small>
+      <strong id="hintsCount">0</strong>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="panel sidebar">
+    <div class="section-title">
+      <span>Mapa das salas</span>
+      <span id="percent">0%</span>
+    </div>
+
+    <div class="progressbar">
+      <span id="progress"></span>
+    </div>
+
+    <div class="rooms" id="roomsMap"></div>
+
+    <p class="sidebar-note">
+      🔐 Resolva o desafio para abrir a próxima sala.
+      Se errar, leia o feedback e peça dicas até encontrar a resposta.
+    </p>
+
+    <p class="sidebar-note">
+      ⏱️ O cronômetro começa quando você inicia a missão.
+    </p>
+  </aside>
+
+  <main class="panel game">
+    <div class="room-top">
+      <span class="pill" id="typePill">Preparação</span>
+      <span class="room-number" id="roomNumber">
+        Missão de 60 minutos
+      </span>
+    </div>
+
+    <h2 id="roomTitle">Você consegue escapar?</h2>
+
+    <p class="question" id="question">
+      Sua equipe está presa no arquivo central de Recursos Humanos.
+      Resolva os 30 desafios para escapar.
+    </p>
+
+    <div id="answerArea"></div>
+    <div id="feedback" class="feedback"></div>
+    <div id="hintBox" class="hint"></div>
+
+    <div class="actions" id="actions">
+      <button class="btn primary" id="startBtn">
+        Iniciar missão →
+      </button>
+    </div>
+
+    <div class="bottomline">
+      <span>Conhecimento abre portas. Respeito protege pessoas.</span>
+      <span>Operação CLT · RH</span>
+    </div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div id="modalIcon">🏆</div>
+    <h2 id="modalTitle">Missão concluída!</h2>
+    <p id="modalText"></p>
+    <div id="modalExtra"></div>
+    <button class="btn primary" id="restartBtn">
+      Jogar novamente
+    </button>
+  </div>
+</div>
+
+</div>
